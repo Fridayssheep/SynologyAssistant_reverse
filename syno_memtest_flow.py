@@ -771,6 +771,7 @@ def main() -> int:
     parser.add_argument("--a4", type=lambda s: int(s, 0), default=DEFAULT_A4, help="field 0xA4 u32")
     parser.add_argument("--a6", type=lambda s: int(s, 0), default=DEFAULT_A6, help="field 0xA6 u32")
     parser.add_argument("--discover-timeout", type=float, default=DEFAULT_DISCOVERY_TIMEOUT, help="discovery timeout seconds")
+    parser.add_argument("--skip-discovery", action="store_true", help="skip initial status discovery and go directly to the requested action")
     parser.add_argument("--wait-memory-test", type=float, default=0.0, help="after planning, wait up to N seconds for status=9")
     parser.add_argument("--username", help="administrator account")
     parser.add_argument("--password", help="administrator password")
@@ -840,17 +841,19 @@ def main() -> int:
     listen_ports = parse_port_list(args.listen_ports)
     packet_types = parse_packet_types(args.packet_types)
 
-    state = discover_target(
-        target_ip=args.target_ip,
-        target_port=args.target_port,
-        bind_send_port=args.bind_send_port,
-        listen_ports=listen_ports,
-        packet_types=packet_types,
-        a4=args.a4,
-        a6=args.a6,
-        timeout=args.discover_timeout,
-        verbose=args.verbose,
-    )
+    state = None
+    if not args.skip_discovery:
+        state = discover_target(
+            target_ip=args.target_ip,
+            target_port=args.target_port,
+            bind_send_port=args.bind_send_port,
+            listen_ports=listen_ports,
+            packet_types=packet_types,
+            a4=args.a4,
+            a6=args.a6,
+            timeout=args.discover_timeout,
+            verbose=args.verbose,
+        )
 
     creds = None
     if not args.no_credentials:

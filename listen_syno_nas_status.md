@@ -479,6 +479,7 @@ python3 syno_memtest_flow.py \
 python3 syno_memtest_flow.py \
   --target-ip 192.168.2.11 \
   --no-credentials \
+  --skip-discovery \
   --fetch-remote-key \
   --local-mac 02:11:32:2a:d6:1c \
   --verbose \
@@ -487,6 +488,8 @@ python3 syno_memtest_flow.py \
 ```
 
 如果 NAS 已经处于 `MEMORY_TEST_IN_PROGRESS`，它可能只继续回状态包，不再接受新的认证/key exchange；这种情况下等内存测试结束后再执行上面的 key 获取命令。
+
+`--skip-discovery` 用来避免前置状态探测先消耗 8 秒并混入状态包；专门调试 key exchange 时建议打开。
 
 只组包，不发送：
 
