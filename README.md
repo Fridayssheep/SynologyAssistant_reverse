@@ -1,6 +1,8 @@
-# Synology Assistant UDP Reverse Notes
+# SynologyAssistant_reverse
 
-当前分析对象是 Linux 版 `unpacked/deb/opt/Synology/SynologyAssistant/SynologyAssistant.bin`。这份笔记只写已经能从二进制里对上的链路，并把“它如何拿到 DSM/NAS 启动状态”展开到包字段级别。
+这是一个用于研究DSM的SynologyAssistant是如何探寻发现局域网中的DSM状态并对其进行设置的项目
+
+如果你不需要看其UDP包的传输细节和内容解析而是只需要解析NAS的广播状态，你可以转到[这个文件](./listen_syno_nas_status.md)来查看具体介绍
 
 ## 介绍
 
