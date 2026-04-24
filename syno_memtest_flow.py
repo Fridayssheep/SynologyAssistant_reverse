@@ -521,6 +521,7 @@ def fetch_remote_key(
     timeout: float,
     verbose: bool,
     dump_packet_hex: bool = False,
+    dump_response_hex: bool = False,
 ) -> KeyExchangeResult:
     _, crypto_box_keypair, _, crypto_box_seal_open = require_nacl_bindings()
     local_public_key, local_secret_key = crypto_box_keypair()
@@ -572,12 +573,26 @@ def fetch_remote_key(
             if not blob.startswith(ALT_HEADER):
                 if verbose:
                     header_hex = blob[:8].hex() if len(blob) >= 8 else blob.hex()
+                    packet_summary = ""
+                    if blob.startswith(CLEAR_HEADER):
+                        try:
+                            parsed_clear = parse_packet(blob)
+                            packet_summary = (
+                                f" packet={parsed_clear.get('packet_type_name') or parsed_clear.get('packet_type_value')} "
+                                f"fields={[item.get('field_id') for item in parsed_clear.get('fields', []) if isinstance(item, dict)]}"
+                            )
+                        except Exception:
+                            packet_summary = ""
                     print(
                         f"{now_text()} key_exchange_ignore "
-                        f"src={addr[0]} bytes={len(blob)} header={header_hex}"
+                        f"src={addr[0]} bytes={len(blob)} header={header_hex}{packet_summary}"
                     )
+                if dump_response_hex:
+                    print(f"{now_text()} key_exchange_clear_response_hex={blob.hex()}")
                 continue
             seen_alt_from_target += 1
+            if dump_response_hex:
+                print(f"{now_text()} key_exchange_alt_response_hex={blob.hex()}")
             try:
                 decrypted = crypto_box_seal_open(blob[8:], local_public_key, local_secret_key)
             except Exception as exc:
@@ -769,6 +784,7 @@ def main() -> int:
     parser.add_argument("--key-timeout", type=float, default=5.0, help="key exchange timeout seconds")
     parser.add_argument("--dump-key-exchange-json", action="store_true", help="print decrypted key-exchange response JSON")
     parser.add_argument("--dump-key-exchange-packet-hex", action="store_true", help="print key-exchange request packet hex")
+    parser.add_argument("--dump-key-exchange-response-hex", action="store_true", help="print key-exchange candidate response packets as hex")
     parser.add_argument("--remote-key-hex", help="64-hex-character remote public key used by the memtest sealed box")
     parser.add_argument("--sender-key-id", type=lambda s: int(s, 0), help="override field 0xC5 sender key id")
     parser.add_argument(
@@ -888,6 +904,7 @@ def main() -> int:
             timeout=args.key_timeout,
             verbose=args.verbose,
             dump_packet_hex=args.dump_key_exchange_packet_hex,
+            dump_response_hex=args.dump_key_exchange_response_hex,
         )
         remote_key_hex = key_result.remote_key_hex
         print(

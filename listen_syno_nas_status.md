@@ -361,13 +361,16 @@ udp_packet =
 | `0xc4` | 本机临时 public key，64 hex 字符 |
 | `0xc5` | 本机 sender key id |
 
-NAS 随后的 `457` 字节回包是用本机 `0xc4` 加密的 sealed-box。也就是说，被动 pcap 里看得到本机公钥，但看不到本机临时私钥，所以不能直接从旧 pcap 解出 NAS 公钥。正确做法是主动复现这一步：我们自己生成一对临时 key，发同样的 `0x01 + 0xc4/0xc5` 请求，然后用自己的私钥解 NAS 回包，抽取其中的 `0xc4` 作为远端 NAS 公钥。
+NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncrypted` 路径。该路径会先检查 `alt/encrypted` 头，再用本机 keypair 做 `crypto_box_open` 风格解密；它和发出 MemTest 请求时的 sealed-box 构造相关，但不能简单等同于“对旧 pcap 直接执行 `crypto_box_seal_open` 就一定能打开”。被动 pcap 里看得到本机公钥，但看不到当时 Assistant 的临时私钥，所以旧 pcap 不能直接解出 NAS 公钥。
+
+正确做法仍然是主动复现这一步：我们自己生成一对临时 key，发同样的 `0x01 + 0xc4/0xc5` 请求，然后尝试用自己的私钥解 NAS 回包，抽取其中的 `0xc4` 作为远端 NAS 公钥。实测时如果 NAS 已经处于 `MEMORY_TEST_IN_PROGRESS`，它可能只继续回状态或旧会话相关的 encrypted 包，不再对新的 key exchange 返回可由当前临时私钥解开的内容。
 
 `syno_memtest_flow.py` 现在已经补上这条路径：
 
 - `--fetch-remote-key`：主动发 key exchange 并解密 NAS 回包
 - `--dump-key-exchange-json`：打印解密后的 TLV
 - `--dump-key-exchange-packet-hex`：打印 157 字节明文请求
+- `--dump-key-exchange-response-hex`：打印候选回包原始 hex，方便继续逆向解密失败原因
 - 如果 `--send-memtest` / `--dry-run-packet` 没提供 `--remote-key-hex`，脚本会自动先执行 `--fetch-remote-key`
 
 ### 1.6 Python PoC 的当前能力
@@ -479,6 +482,7 @@ python3 syno_memtest_flow.py \
   --fetch-remote-key \
   --local-mac 02:11:32:2a:d6:1c \
   --verbose \
+  --dump-key-exchange-response-hex \
   --dump-key-exchange-json
 ```
 
