@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="img-no-display">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css"/>
+<script src="../../../../help/scrollbar/flexcroll.js" type="text/javascript"></script>
+<script src="../../../../help/scrollbar/initFlexcroll.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>Synology Assistant</h1>
+<p>Synology Assistant er et brugervenligt værktøj til at administrere lagersystemer på det lokale netværk (LAN), især når du har flere enheder, der arbejder på samme LAN.</p>
+<p>For at downloade og installere Synology Assistant på din computer, skal du gå til <a href="https://www.synology.com/support/download" target="_blank">Download Center</a> og vælge din model. Gå derefter til fanen <b>Skrivebordsprogrammer</b> for at finde Synology Assistant.
+
+<h2><a name="Basic Control"></a>Grundlæggende kontrol</h2>
+<p>Synology Assistant kører i baggrunden, når den minimeres til systembakken. Højreklik på ikonet for følgende muligheder:
+	<ul>
+<li>Tilslut/frigør printere: Op til 2 printere</li>
+<li>Åbn/luk Assistant</li>
+</ul>
+</p>
+<h2><a name="management"></a>Administration</h2>
+<h4>Sådan søger du efter lagersystemer i LAN:</h4>
+<p>Klik på <b>Søg</b> for at opdatere listen over lagersystemer i dit LAN.</p>
+<h4>Sådan opretter du forbindelse til en server:</h4>
+<p>Du kan oprette forbindelse til din server på en af følgende måder:
+	<ul>
+<li>Vælg en server, og klik på <b>Opret forbindelse</b>.</li>
+<li>Dobbeltklik på en server.</li>
+</ul>
+</p>
+<h4>Sådan tilknytter du et drev:</h4>
+<p>Klik på <b>Tilknyt drev</b> for at tilknytte en delt mappe som et netværksdrev til lokal adgang.</p>
+<h4>Sådan konfigurerer du WOL:</h4>
+<p>Du kan konfigurere Wake on LAN (WOL) til at vække dine Synology-lagersystemer eksternt, hvis du har aktiveret denne funktion i <b>Kontrolpanel</b> &gt; <b>Hardware og Strømforsyning</b> &gt; <b>Generelt</b>. Vælg en server fra listen, og klik på <b>Konfigurer WOL</b>. For mere information, se afsnittet <a href="#wol">WOL</a>.</p>
+<div class="section">
+<h4>Bemærk:</h4>
+<p>Mulighederne for drevtilknytning og WOL er ikke tilgængelige, hvis din Synology-enhed ikke understøtter funktionerne.</p>
+</div>
+<h2>Status</h2>
+<p>Denne tabel viser enhedsstatusser i Synology Assistant og forklarer, hvad hver status betyder.
+	<table cellpadding="0" cellspacing="1" width="100%">
+<tbody>
+<tr>
+<th align="center" width="25%">Status</th>
+<th align="center" width="75%">Statusindikering</th>
+</tr>
+<tr>
+<td align="center">Starter</td>
+<td align="left">Systemet starter op.</td>
+</tr>
+<tr>
+<td align="center">Kontrollerer fremskridt</td>
+<td align="left">Systemet installeres eller konfigureres. Klik for at kontrollere fremskridtet.</td>
+</tr>
+<tr>
+<td align="center">Kontrollerer kvote</td>
+<td align="left">Systemet kontrollerer diskens kvote. Dette kan skyldes en forkert nedlukning.</td>
+</tr>
+<tr>
+<td align="center">Undersøgelse af filsystem (X minutter tilbage)</td>
+<td align="left">Systemet undersøger filsystemet. Processen afsluttes om det viste antal minutter. Dette sker normalt, når systemet registrerer fejl i filsystemet og beder dig om at udføre en filsystemkontrol.</td>
+</tr>
+<tr>
+<td align="center">Konfigurationsfejl</td>
+<td align="left">Der opstod en fejl under konfigurationen. Dobbeltklik på serveren for at anvende indstillingerne igen.</td>
+</tr>
+<tr>
+<td align="center">Konfiguration mistet</td>
+<td align="left">Dette sker normalt efter en <a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">Mode 2 Reset</a>, som er ved at trykke og holde RESET-knappen nede på enheden. Du kan dobbeltklikke på serveren og geninstallere operativsystemet (OS) for at få en frisk start uden at påvirke dataene i diskenheden. Hvis du ikke trykkede på RESET-knappen, kan du se <a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">andre mulige årsager</a> til denne fejlmeddelelse.</td>
+</tr>
+<tr>
+<td align="center">Forbindelsen mislykkedes</td>
+<td align="left">Fejl under netværkskonfiguration. Dobbeltklik på serveren, eller klik på <b>Opsætning</b> for at konfigurere netværksindstillinger.</td>
+</tr>
+<tr>
+<td align="center">Henter forbindelsesstatus</td>
+<td align="left">Systemet kontrollerer forbindelsesstatus.</td>
+</tr>
+<tr>
+<td align="center">Kan migreres</td>
+<td align="left">Systemkonfigurationer på diskene kan migreres til denne enhed. Dette indikerer normalt, at OS-versionen registreret på bundkortet er nyere end OS-versionen på diskene. Dette sker ofte efter RMA-service. Dobbeltklik på serveren for at fuldføre migreringen.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL er konfigureret, men den aktuelle status er ukendt. Se afsnittet <a href="#wol">WOL</a> for mere information.</td>
+</tr>
+<tr>
+<td align="center">Ikke konfigureret</td>
+<td align="left">De indledende OS-konfigurationer (f.eks. admin-adgangskode) efter installationen er ikke blevet fuldført. Dobbeltklik på serveren for at afslutte konfigurationen.</td>
+</tr>
+<tr>
+<td align="center">Ikke installeret</td>
+<td align="left">Mulige årsager: Ingen diske er registreret på din server; OS er ikke installeret; OS er ikke registreret på diskene; eller du har klikket på <b>Slet alle data</b> i <b>Kontrolpanel</b> &gt; <b>Opdater &amp; Gendan</b> &gt; <b>Systemnulstilling</b>.<br/>Løsning: Sørg for, at diskene er sunde, korrekt isat og kan registreres af serveren. Dobbeltklik derefter på serveren for at starte installationen af OS. Hvis OS allerede var installeret på diskene, og du har brugt diskene i et stykke tid, indikerer denne besked, at serveren ikke kan genkende OS-dataene på diskene. I dette tilfælde skal du afbryde installationen, slukke for serveren, <a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">lære hvorfor diskene ikke genkendes</a>, og <a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">køre diagnostiske tests</a> på en computer for at kontrollere diskens sundhed.</td>
+</tr>
+<tr>
+<td align="center">Offline</td>
+<td align="left">Systemet er offline.</td>
+</tr>
+<tr>
+<td align="center">Udfører hukommelsestest (X%)</td>
+<td align="left">Fremskridtet for hukommelsestesten er X%. Hvis du bliver bedt om at køre en hukommelsestest, skal du køre den mindst 3 gange. Testresultaterne gemmes i systemloggen. <a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">Generér en debug.dat-log</a> og vedhæft den i supportanmodningen, så Synology kan undersøge sagen.</td>
+</tr>
+<tr>
+<td align="center">Klar</td>
+<td align="left">Systemet er installeret og klar til brug. Dobbeltklik på serveren, eller klik på <b>Opret forbindelse</b> for at få adgang til serveren.</td>
+</tr>
+<tr>
+<td align="center">Gendannelig</td>
+<td align="left">Systemet kan gendannes. Dette indikerer normalt, at OS-versionen registreret på bundkortet er ældre end OS-versionen på diskene. Dette sker ofte efter RMA-service. Dobbeltklik på serveren for at fuldføre gendannelsen.</td>
+</tr>
+<tr>
+<td align="center">Starter tjenester</td>
+<td align="left">Systemet starter tjenester. Det kan tage op til 10 minutter, før alle tjenester er fuldt startet.</td>
+</tr>
+<tr>
+<td align="center">Opgraderer</td>
+<td align="left">Enheden opdaterer OS. Vent venligst, indtil opdateringsprocessen er fuldført.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<h2><a name="wol"></a>WOL</h2>
+<h4>Sådan konfigurerer du WOL:</h4>
+<ol>
+<li>Gå til <b>Kontrolpanel</b> &gt; <b>Hardware og Strømforsyning</b> &gt; <b>Generelt</b> og aktiver WOL.</li>
+<li>I Synology Assistant skal du gå til fanen <b>Administration</b>. Vælg en Synology NAS, og klik på <b>Konfigurer WOL</b> for at se MAC-adressen, der er tilgængelig for WOL.</li>
+<li>Efter opsætning ændres serverens <b>WOL-status</b> på fanen <b>Administration</b> til "WOL".</li>
+</ol>
+<div class="section">
+<h4>Bemærk:</h4>
+<ol>
+<li>WOL-funktionen understøttes kun på nogle Synology NAS-modeller. Se din servers <a href="https://www.synology.com/support/download" target="_blank">producentmanual</a> for mere information.</li>
+<li>Du kan også højreklikke på en server og vælge <b>WOL</b> &gt; <b>Konfigurer</b>.</li>
+</ol>
+</div>
+<h4>Sådan vækker du en server:</h4>
+<ol>
+<li>Højreklik på en server, og klik på <b>WOL</b> &gt; <b>Væk</b>.</li>
+<li>Serverens <b>WOL-status</b> ændres til "Fremskridt X%", hvilket angiver vækningsfremskridtet.</li>
+<li>Når WOL er fuldført, ændres WOL-status til "WOL". For mere information om WOL-statusser, se følgende tabel.</li>
+<table cellpadding="0" cellspacing="1" width="100%">
+<tr>
+<th align="center" width="25%">WOL-status</th>
+<th align="center" width="75%">Statusindikering</th>
+</tr>
+<tr>
+<td align="center">WOL</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL er konfigureret.</li>
+<li>Serveren er tændt.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">--</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL er ikke konfigureret.</li>
+<li>Serveren understøtter ikke WOL-funktionen.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">Fremskridt X%</td>
+<td align="left">Serveren tændes. Vækningsfremskridtet er X%.</td>
+</tr>
+<tr>
+<td align="center">Slukket</td>
+<td align="left">Serveren er slukket.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL er konfigureret, men den aktuelle status er ukendt.</td>
+</tr>
+</table>
+</ol>
+<h4>Sådan deaktiverer du WOL for en server:</h4>
+<ol>
+<li>Højreklik på en server, og klik på <b>WOL</b> &gt; <b>Fjern</b>.</li>
+<li><b>WOL-status</b> for serveren ændres til "--".</li>
+</ol>
+<h2><a name="Printer Device"></a>Printerenhed</h2>
+<p>I Synology Assistant kan du centralt administrere printere, der er tilsluttet din Synology NAS, på fanen <b>Printerenhed</b>. Både basis- og multifunktionsprintere understøttes. For at dele en printer, der er tilsluttet Synology NAS i LAN via Synology Assistant, skal du følge disse instruktioner.</p>
+<p>Bemærk, at printerenheder kun understøttes på nogle Synology NAS-modeller, der kører DSM. Se din servers <a href="https://www.synology.com/support/download" target="_blank">producentmanual</a> for mere information.</p>
+<h4>Sådan tilføjer du en printer:</h4>
+<ol>
+<li>Tilslut printeren til din Synology NAS.</li>
+<li>Konfigurer printertilstand i <b>Kontrolpanel</b> &gt; <b>Eksterne enheder</b>. En liste over tilsluttede printere vises her.</li>
+<li>Vælg printeren, klik på <b>USB Printer Manager</b>, og vælg <b>Konfigurer printer</b> for at vælge driftsindstilling for din printer. Vælg <b>Netværksprinter</b>-tilstand, hvis du kun bruger printfunktionen. Vælg <b>Network MFP</b>* hvis du vil bruge enten print, scan eller fax-funktioner.</li>
+<li>I Synology Assistant skal du gå til fanen <b>Printerenhed</b>. Klik på <b>Tilføj</b> og følg installationsguiden for at tilføje printeren til din computer. Hvis det er første gang, du tilføjer printeren, skal du have printerdriveren klar til installation.</li>
+</ol>
+<h4>Sådan tilslutter/frigør du en printer:</h4>
+<p>Når du udskriver og sender fax, kan du udføre handlingerne uden manuelt at tilslutte printeren i Synology Assistant. Hvis du derimod vil bruge scannerfunktionen eller modtage fax på en multifunktionsprinter, skal du tilslutte printeren for at forhindre, at udskriftsjob afbrydes af andre brugere.</p>
+<p>Når en printer er manuelt tilsluttet i Synology Assistant, kan andre brugere, der deler den samme printer i LAN, ikke få adgang til enheden. Husk at frigøre printeren, når du er færdig med dit udskriftsjob.</p>
+<p>Du kan følge disse instruktioner for at tilslutte eller frigøre printeren.</p>
+<ol>
+<li>I Synology Assistant skal du gå til fanen <b>Printerenhed</b>.</li>
+<li>Vælg den printer, du vil tilslutte, og klik på <b>Tilslut</b>. Synology Assistant vil begynde at oprette forbindelse til printeren. Statuskolonnen viser driftsstatussen.</li>
+<li>Når en printer er tilsluttet, bliver knappen <b>Tilslut</b> til <b>Frigør</b>. Du kan klikke på den for at frigøre den tilsluttede printer.</li>
+</ol>
+<div class="section">
+<h4>Bemærk:</h4>
+<ul>
+<li>I statuskolonnen, hvis printerens status er <b>Tilgængelig</b>, kan du tilslutte printeren til eget brug.</li>
+<li>Hvis status er <b>Tilsluttet</b>, er printeren allerede tilsluttet din computer.</li>
+<li>Hvis printeren ikke er tilgængelig i øjeblikket, vil klik på <b>Tilslut</b> tilføje dig til ventelisten for forbindelse.</li>
+</ul>
+</div>
+<h4>Sådan fjerner du en printer:</h4>
+<ol>
+<li>Vælg den printer, du vil fjerne fra listen.</li>
+<li>Klik på <b>Fjern</b> for at slette printeren fra listen.</li>
+</ol>
+<h4>Sådan redigerer du printeroplysninger:</h4>
+<p>Når Synology Assistant ikke automatisk kan finde IP-adressen på din printer, kan du manuelt indstille IP-adressen her.</p>
+<ol>
+<li>Vælg den printer, du vil redigere.</li>
+<li>Klik på <b>Rediger</b> og indtast den korrekte IP-adresse på din printer.</li>
+</ol>
+<div class="section">
+<h4>Bemærk:</h4>
+<ul>
+<li>Network MFP er kun for Windows-brugere.</li>
+<li>Før du konfigurerer en printer, skal du se listen over <a href="https://www.synology.com/compatibility?search_by=products&amp;model=&amp;category=usb_printers&amp;p=1" target="_blank">kompatible printere</a>.</li>
+<li>USB-hub understøttes ikke ved tilslutning af en printer til deling.</li>
+<li>Funktionen til hukommelseskort på den tilsluttede printer understøttes ikke.</li>
+</ul>
+</div>
+<h2><a name="preferences"></a>Indstillinger</h2>
+<p>Du kan klikke på tandhjulsikonet mærket <b>Indstillinger</b> øverst til højre for at konfigurere følgende indstillinger.</p>
+<ul>
+<li><b>Standardfunktioner-fane</b>: Vælg de funktionsfaner, der skal vises i Synology Assistant.</li>
+<li><b>Sprog</b>: Vælg et standardsprog til Synology Assistants brugergrænseflade. Du skal genstarte Synology Assistant, for at den nye indstilling træder i kraft.</li>
+<li><b>Hukommelsestest</b>: Hvis du markerer afkrydsningsfeltet, vises knappen <b>Hukommelsestest</b> på fanen <b>Administration</b> næste gang, du starter Synology Assistant. Du kan vælge en server og klikke på knappen for at udføre en hukommelsesdiagnosetest. Serveren genstartes, og testen begynder. Testens fremskridt vises i kolonnen <b>Status</b> i serverlisten.</li>
+</ul>
+<div class="section">
+<h4>Bemærk:</h4>
+<ul>
+<li>Det kan tage noget tid at fuldføre hukommelsestesten, afhængigt af den fysiske hukommelsesstørrelse på din server. På modeller med dobbelt controller skal du kun teste én controller ad gangen, så systemet stadig kan levere tjenester under testen.</li>
+<li>Fejlfinding af problemer med at oprette forbindelse til din server via Synology Assistant kan findes i <a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">denne artikel</a>.</li>
+</ul>
+</div>
+</p></body>
+</html>

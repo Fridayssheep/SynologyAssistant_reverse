@@ -1,0 +1,243 @@
+/* 基本版型 */
+body
+{
+	background-color: #FEFEFE;
+	margin: 10px 5px;
+	padding: 0px;
+}
+
+/* 區塊 */
+div.section
+{
+	font-size: 12px;
+	line-height: 1.6em;
+	border: 1px solid #999999;
+	background-color: #EFEFEF;
+	margin: 10px 15px;
+}
+
+div.section h3 { font-size: 12px; color:#333; margin-left:5px; }
+div.section h4 { font-size: 12px; color:#333; }
+div.section p, div.section li, div.section dt, div.section dd
+{
+	font-size: 12px;
+	font-weight: normal;
+}
+
+div.link
+{
+	background-color: #FEC;
+	margin:5px 10px 20px 10px;
+	border: 1px solid #F93;
+}
+div.link p
+{
+	background-color: #F93;
+	padding: 0 2px;
+	margin: 0;
+	font-weight: 800;
+	color: #FFF;
+	text-align: center;
+	line-height: 1.6em;	
+}
+div.link a
+{
+font-weight: 300;
+letter-spacing: 0px;
+text-decoration: none;
+color: black;
+}
+div.link a:hover
+{
+color: orange;
+font-size: 12px;
+font-weight: 800;
+}
+div.link a:active
+{
+color: red;
+}
+
+.top {
+	text-align: right;
+	padding-bottom: 1.1em;
+}
+.top a {
+	text-decoration: none;
+	color: white;
+	font-weight: 800;
+	padding:2px;
+	font-size: 12px;
+	background-color: #F93;
+}
+.top a:hover {
+color: yellow;
+}
+.top a:active {
+color: red;
+font-size: 12px;
+}
+
+.location, .location2
+{
+	text-align: left;
+	font-size: 12px;
+	margin: 0 12px;
+	line-height: 1.2em;
+	border-top: 1px #000 dotted;
+	padding: 4px 0 8px 0;
+}
+.location2 { border-top: none; }
+.location b, .location2 b {
+	font-style: italic;
+	color: white;
+	background-color: #777;
+	padding-right:3px;
+
+}
+.location span, .location2 span {
+	background-color: #777;
+	color: #CCC;
+	padding-right:3px;
+	padding: 3px;
+}
+.location span.head, .location2 span.head {
+background-color: #444;
+padding-left:2px;
+color:white;
+}
+
+/* 標題 */
+h1, h2, h3, h4
+{
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif", "微軟正黑體", "Meiryo", "Microsoft yahei","微软雅黑", "Malgun Gothic","Gulim"; 
+	color: #222200;
+	margin: 1em 10px 0.5em 10px;
+	padding: 0 0 1px 0;
+	font-weight: bold;
+}
+
+h1
+{
+	margin-top: 0;
+	border-bottom: 1px solid;
+	font-weight: 800;
+	font-size: 16px;
+}
+h2
+{
+border-bottom: 1px #000 dotted;
+font-size: 14px;
+
+}
+h3
+{
+	margin: 1.1em 10px 0 10px;
+	padding: 1px 2px;
+	background-color: #EFEFEF;
+	font-size: 12px;
+}
+
+h4
+{
+	margin-top: 0.6em;
+	margin-bottom:0.30em;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif", "微軟正黑體", "Meiryo", "Microsoft yahei","微软雅黑", "Malgun Gothic","Gulim"; 
+	font-weight: bold;
+	font-size: 12px;
+	color: #338;
+}
+
+/* 段落 */
+p, ol, ul, dl, table
+{
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif", "微軟正黑體", "Meiryo", "Microsoft yahei","微软雅黑", "Malgun Gothic","Gulim"; 
+	font-size: 12px;
+	color: #111111;
+	line-height: 1.6em;
+	margin: 0 16px 0 16px;
+	padding: 0 0 6px 0;
+}
+
+ol li, ul li
+{
+	font-size: 12px;
+	margin: 0 0 0 25px;
+	padding-bottom: 3px;
+}
+
+ol ul, ul ul, ol ol, ul ol { padding-bottom: 0px; }
+ul li { list-style-type: square; }
+ol ul li, ul ul li { list-style-type: square; }
+ol ol li, ul ol li { list-style-type: lower-alpha; }
+li.no { list-style-type: none; }
+ul p {padding-left: 15px;}
+/* 表格 */
+table, th, td
+{
+	border: 1px solid #999999;
+	border-collapse: collapse;
+	font-size: 12px;
+	vertical-align: middle;
+	padding: 0px;
+}
+table
+{
+width: 95%;
+margin-bottom: 1em;
+}
+th,td
+{
+	padding: 1px 5px 1px 5px;
+	background-color: #EFEFEF;
+}
+
+td { background-color: #FEFEFE; }
+table caption {
+	text-align: left;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif", "微軟正黑體", "Meiryo", "Microsoft yahei","微软雅黑", "Malgun Gothic","Gulim"; 
+	font-weight: bold;
+	font-size: 12px;
+}
+
+/* 段落中的強調文字 */
+.letterSpace5
+{
+	letter-spacing: 3px;
+	color: #CC0000;
+}
+
+b, strong
+{
+	color: #220;
+	
+	padding-left: 2px;
+	padding-right: 2px;
+	font-weight: bold;
+}
+
+.note_head
+{
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif", "微軟正黑體", "Meiryo", "Microsoft yahei","微软雅黑", "Malgun Gothic","Gulim"; 
+	font-weight: bold;
+	color: #C30;
+	margin-right: 2px;
+}
+.note_content { color: #CC0000; }
+dt { font-weight: 800; }
+a
+{
+	text-decoration: none;
+	color: #36D;
+	font-weight: bold;
+	letter-spacing: 0.5px;
+}
+a:hover {
+text-decoration:underline;
+color: #06C;
+}
+a:active {
+font-size: 110%;
+color: #C03;
+}
+

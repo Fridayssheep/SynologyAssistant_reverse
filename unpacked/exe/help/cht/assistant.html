@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="img-no-display">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" charset="utf-8">
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css">
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../../../../help/scrollbar/flexcroll.js"></script>
+<script type="text/javascript" src="../../../../help/scrollbar/initFlexcroll.js"></script>
+</head>
+<body>
+
+<h1>Synology Assistant</h1>
+<p>Synology Assistant 是一款能在區域網路內管理儲存系統的易用工具，尤其是有多台機器同時在區域網路內運作時。</p>
+<p>若要在您的電腦下載及安裝 Synology Assistant，請前往<a href="https://www.synology.com/support/download" target="_blank">下載中心</a>並選擇您的機種。接著前往<b>桌面工具</b>頁籤，便可找到 Synology Assistant。
+
+<h2><a name="Basic Control"></a>基本操作</h2>
+<p>當 Synology Assistant 最小化至系統列時，其作業會繼續在背景執行。在圖示上按一下右鍵可執行以下功能：
+	<ul>
+		<li>連線 / 解除連線印表機：最多 2 台</li>
+		<li>開啟 / 關閉 Assistant</li>
+	</ul>
+</p>
+
+<h2><a name="management"></a>管理</h2>
+<h4>若要搜尋區域網路中的儲存系統：</h4>
+<p>按一下<b>搜尋</b>來更新區域網路中的儲存系統清單。</p>
+
+<h4>若要連線至伺服器：</h4>
+<p>您可以使用下列任一方式來連線至伺服器：
+	<ul>
+		<li>選擇一台伺服器並按一下<b>連線</b>。</li>
+		<li>對伺服器按兩下左鍵。</li>
+	</ul>
+</p>
+
+<h4>若要設定網路硬碟：</h4>
+<p>按一下<b>網路硬碟</b>，將共用資夾設定為網路硬碟以利本機存取。</p>
+
+<h4>若要設定 WOL：</h4>
+<p>若您已在<b>控制台</b> > <b>硬體 & 電源</b> > <b>一般</b>中啟用網路喚醒 (Wake on LAN，WOL)，即可設定此功能來遠端開啟 Synology 儲存系統。在清單選擇一台伺服器後，按一下<b>設定 WOL</b>。如需更多資訊，請參閱 <A href="#wol">WOL</A> 段落。</p>
+<div class="section">
+<h4>注意：</h4>
+<p>若您的 Synology 裝置不支援設定網路硬碟及 WOL，這些選項將不會出現。</p>
+</div>
+
+<h2>系統狀態</h2>
+<p>此表格列出 Synology Assistant 中顯示的裝置狀態及對應說明。
+	<table width="100%" cellspacing="1" cellpadding="0">
+		<tbody>
+			<tr>
+				<th align="center" width="25%">狀態</th>
+				<th align="center" width="75%">狀態說明</th>
+			</tr>
+			<tr>
+				<td align="center">開機中</td>
+				<td align="left">系統正在開機。</td>
+			</tr>
+			<tr>
+				<td align="center">檢視進度</td>
+				<td align="left">正在安裝或設定系統，請按一下以檢視進度。</td>
+			</tr>
+			<tr>
+				<td align="center">檢查空間配額中</td>
+				<td align="left">系統正在檢查硬碟配額，這可能會導致不正常關機。</td>
+			</tr>
+			<tr>
+				<td align="center">檢查檔案系統中 (尚餘 X 分鐘)</td>
+				<td align="left">系統正在檢查檔案系統，此程序會在顯示的時間內完成。通常在系統偵測到檔案系統錯誤並要求您執行檔案系統檢查時，會出現此狀態。</td>
+			</tr>
+			<tr>
+				<td align="center">設定錯誤</td>
+				<td align="left">設定時出現錯誤，請在伺服器上按兩下以重新套用設定。</td>
+			</tr>
+			<tr>
+				<td align="center">設定資料毀損</td>
+				<td align="left">此狀態通常會在執行<a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">重置模式二</a> (即按住裝置上的 RESET 按鈕) 後出現，您可以在伺服器上按兩下並重新安裝作業系統，將不會影響到儲存空間上的資料。若您未按下 RESET 按鈕，請檢查導致此錯誤訊息的<a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">其他可能原因</a>。</td>
+			</tr>
+			<tr>
+				<td align="center">連線失敗</td>
+				<td align="left">網路設定錯誤，請在伺服器上按兩下或按一下<b>設定</b>以進行網路設定。</td>
+			</tr>
+			<tr>
+				<td align="center">取得連線狀態中</td>
+				<td align="left">系統正在檢查連線狀態。</td>
+			</tr>
+			<tr>
+				<td align="center">可轉移</td>
+				<td align="left">硬碟上的系統設定可以轉移至此裝置上。此狀態通常代表主機板上紀錄的作業系統版本較安裝在硬碟上的版本新，可能是 RMA 服務所導致。請在伺服器上按兩下來完成轉移。</td>
+			</tr>
+			<tr>
+				<td align="center">N/A</td>
+				<td align="left">WOL 已設定完成，但目前處於未知狀態。請參閱 <a href="#wol">WOL</a> 段落來了解更多資訊。</td>
+			</tr>
+			<tr>
+				<td align="center">尚未設定</td>
+				<td align="left">尚未完成作業系統安裝後的初始設定 (即管理員密碼)，請在伺服器上按兩下來完成設定。</td>
+			</tr>
+			<tr>
+				<td align="center">作業系統未安裝</td>
+				<td align="left">可能原因：伺服器上未偵測到任何硬碟、伺服器偵測到不相容的硬碟、未安裝作業系統、硬碟上偵測不到作業系統、已按下<b>控制台</b> > <b>更新 & 還原</b> > <b>系統設定備份</b>中的<b>清除所有資料</b>。<br>解決方法：請確認硬碟相容且狀態良好、已正確插入、可被伺服器偵測到，接著，在伺服器上按兩下來開始安裝作業系統。若硬碟上已安裝作業系統，且您已使用此硬碟一段時間，此訊息代表伺服器無法辨識硬碟上的作業系統資料。在此狀況下，請中止安裝、關閉伺服器、<a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">了解為何無法辨識硬碟</a>，並在電腦上<a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">執行檢測</a>以檢查硬碟狀態。</td>
+			</tr>
+			<tr>
+				<td align="center">離線</td>
+				<td align="left">系統離線。</td>
+			</tr>
+			<tr>
+				<td align="center">記憶體測試中 (X%)</td>
+				<td align="left">記憶體測試的目前進度為 X%。若您被要求執行記憶體測試，請至少測試 3 次，測試結果將會儲存在系統日誌中，請<a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">產生 debug.dat 日誌</a>並在技術支援表單中附上以供 Synology 檢驗。</td>
+			</tr>
+			<tr>
+				<td align="center">已就緒</td>
+				<td align="left">系統已安裝並就緒，請在伺服器上按兩下或按一下<b>連線</b>以存取伺服器。</td>
+			</tr>
+			<tr>
+				<td align="center">系統可恢復</td>
+				<td align="left">系統可恢復。此狀態通常代表主機板上紀錄的作業系統版本較安裝在硬碟上的版本舊，可能是 RMA 服務所導致。請在伺服器上按兩下來完成復原。</td>
+			</tr>
+			<tr>
+				<td align="center">啟動中</td>
+				<td align="left">系統啟動中，最多可能需花費 10 分鐘以完全啟動所有服務。</td>
+			</tr>
+			<tr>
+				<td align="center">更新中</td>
+				<td align="left">此裝置正在更新作業系統，請等待更新完成。</td>
+			</tr>
+		</tbody>
+	</table>
+</p>
+
+<h2><a name="wol"></a>WOL</h2>
+<h4>若要設定 WOL：</h4>
+<ol>
+	<li>前往<b>控制台</b> > <b>硬體 & 電源</b> > <b>一般</b>啟用 WOL。</li>
+	<li>前往 Synology Assistant 的<b>管理</b>頁籤，選擇一台伺服器並按一下<b>設定 WOL</b>。</li>
+	<li>設定後，伺服器在<b>管理</b>頁籤中的 <b>WOL 狀態</b>會變更為「WOL」。</li>
+</ol>
+<div class="section">
+	<h4>注意：</h4>
+	<ol>
+		<li>僅有特定 Synology NAS 機種支援 WOL 功能，請參閱伺服器的<a href="https://www.synology.com/support/download" target="_blank">產品使用手冊</a>來了解更多資訊。</li>
+		<li>您亦可在伺服器上按一下右鍵並選擇 <b>WOL</b> > <b>設定</b>。</li>
+	</ol>
+</div>
+
+<h4>若要喚醒伺服器：</h4>
+<ol>
+	<li>在伺服器上按一下右鍵，選擇 <b>WOL</b> > <b>喚醒</b>。</li>
+	<li>伺服器的 <b>WOL 狀態</b>會變更為表示喚醒進度的「進度 X%」。</li>
+	<li>WOL 完成時，WOL 狀態會變更為「WOL」。請參閱以下表格來了解更多資訊。</li>
+	<table width="100%" cellspacing="1" cellpadding="0">
+		<tr>
+			<th align="center" width="25%">WOL 狀態</th>
+			<th align="center" width="75%">狀態說明</th>
+		</tr>
+		<tr>
+			<td align="center">WOL</td>
+			<td align="left">
+				<ol class="type_lower-decimal">
+					<li>已設定 WOL。</li>
+					<li>已開啟伺服器。</li>
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">--</td>
+			<td align="left">
+				<ol class="type_lower-decimal">
+					<li>尚未設定 WOL。</li>
+					<li>伺服器不支援 WOL 功能。</li>
+				</ol>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">進度 X%</td>
+			<td align="left">開啟伺服器中，喚醒進度為 X%。</td>
+		</tr>
+		<tr>
+			<td align="center">燈號熄滅</td>
+			<td align="left">伺服器已關機。</td>
+		</tr>
+		<tr>
+			<td align="center">N/A</td>
+			<td align="left">WOL 已設定完成，但目前處於未知狀態。</td>
+		</tr>
+	</table>
+</ol>
+
+<h4>若要停用伺服器的 WOL 功能：</h4>
+<ol>
+	<li>在伺服器上按一下右鍵，選擇 <b>WOL</b> > <b>移除</b>。</li>
+	<li>伺服器的 <b>WOL 狀態</b>會變更為「--」。</li>
+</ol>
+
+<h2><a name="Printer Device"></a>印表機裝置</h2>
+<p>在 Synology Assistant 中，您可以於<b>印表機裝置</b>頁籤集中管理連線至 Synology NAS 的印表機，可支援基本印表機與多功能事務機。若要使用 Synology Assistant 來分享在區域網路內連線至 Synology NAS 的印表機，請依照以下指示操作。</p>
+<p>請注意，僅有運行 DSM 的特定 Synology NAS 機種支援印表機裝置，請參閱伺服器的<a href="https://www.synology.com/support/download" target="_blank">產品使用手冊</a>來了解更多資訊。</p>
+
+<h4>若要新增印表機：</h4>
+<ol>
+	<li>將印表機連線至您的 Synology NAS。</li>
+	<li>在<b>控制台</b> > <b>外接裝置</b>中設定印表機模式，已連接的印表機清單將顯示於此。</li>
+	<li>選擇印表機，按一下 <b>USB 印表機管理員</b>，再選擇<b>設定印表機</b>以選取印表機的運作模式。若您僅使用列印功能，請選擇<b>網路印表機</b>模式。若您要使用列印 / 掃描 / 傳真等功能，請選擇<b>網路多功能事務機</b>* 模式。</li>
+	<li>前往 Synology Assistant 的<b>印表機裝置</b>頁籤。按一下<b>新增</b>並依照設定精靈的指示來將印表機新增至您的電腦。若為首次新增印表機，請準備安裝印表機的驅動程式。</li>
+</ol>
+
+<h4>若要連線 / 解除連線印表機：</h4>
+<p>使用列印功能或發送傳真時，您無須透過 Synology Assistant 來手動連線印表機，即可執行作業。然而，若您想使用多功能事務機的掃描功能或接收傳真，必須手動連線印表機，以避免其他使用者中斷您的列印作業。</p>
+<p>當您透過 Synology Assistant 手動將印表機連線至您的電腦時，區域網路內的其他使用者將無法使用此印表機。在列印作業結束後，請記得解除印表機連線。</p>
+<p>您可依以下指示來連線或解除連線印表機：</p>
+<ol>
+	<li>前往 Synology Assistant 的<b>印表機裝置</b>頁籤。</li>
+	<li>選擇要連線的印表機，按一下<b>連線</b>。Synology Assistant 會開始連線至此印表機。狀態欄位中會顯示連線作業的狀態。</li>
+	<li>印表機成功連線後，<b>連線</b>按紐將變更為<b>解除連線</b>，您可以按一下此按紐來解除印表機的連線。</li>
+</ol>
+
+<div class="section">
+	<h4>注意：</h4>
+	<ul>
+		<li>在狀態欄位中，若印表機狀態為<b>可連線</b>，代表您可連線至此印表機以供個人使用。</li>
+		<li>若狀態為<b>已連線</b>，則表示印表機已經連線至您的電腦。</li>
+		<li>若印表機暫時無法連線，按一下<b>連線</b>會將您加入等待連線名單。</li>
+	</ul>
+</div>
+
+<h4>若要移除印表機：</h4>
+<ol>
+	<li>在清單中選擇您要移除的印表機。</li>
+	<li>按一下<b>移除</b>以將印表機自清單中刪除。</li>
+</ol>
+
+<h4>若要編輯印表機資訊：</h4>
+<p>若 Synology Assistant 無法自動取得印表機的 IP 位址，您可在此手動輸入 IP 位址。</p>
+<ol>
+	<li>選擇您想要編輯的印表機。</li>
+	<li>按一下<b>編輯</b>來輸入印表機的正確 IP 位址。</li>
+</ol>
+
+<div class="section">
+	<h4>注意：</h4>
+	<ul>
+		<li>網路多功能事務機模式僅適用於 Windows 使用者。</li>
+		<li>設定印表機前，請先參閱<a href="https://www.synology.com/compatibility?search_by=products&model=&category=usb_printers&p=1" target="_blank">相容印表機</a>清單。</li>
+		<li>不支援使用 USB 擴充連接埠連線至分享的印表機。</li>
+		<li>已連線的印表機不支援記憶卡功能。</li>
+	</ul>
+</div>
+
+<h2><a name="preferences"></a>偏好設定</h2>
+<p>您可以按一下右上角標示為<b>偏好設定</b>的齒輪圖示來進行下列設定。</p>
+<ul>
+	<li><b>預設功能頁籤</b>：設定 Synology Assistant 中顯示的功能頁籤。</li>
+	<li><b>語言</b>：選擇 Synology Assistant 使用者介面預設的顯示語言。您需要重新開啟 Synology Assistant，新設定才會生效。</li>
+	<li><b>記憶體測試</b>：若勾選此核取方塊，當您下次開啟 Synology Assistant 時，<b>記憶體測試</b>按鈕會顯示在<b>管理</b>頁籤中。您可以選擇一台伺服器，並按一下此按鈕以執行記憶體診斷測試。伺服器會重新開機並開始測試，測試進度會顯示在伺服器清單的<b>狀態</b>欄中。</li>
+</ul>
+
+<div class="section">
+	<h4>注意：</h4>
+	<ul>
+		<li>記憶體測試可能需花費一段時間才會完成，實際時間將依您伺服器的實體記憶體大小而定。測試期間，伺服器無法提供服務。</li>
+		<li>若要排除透過 Synology Assistant 連線至伺服器的問題，請參閱<a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">此文章</a>。</li>
+	</ul>
+</div>
+</body>
+</html>

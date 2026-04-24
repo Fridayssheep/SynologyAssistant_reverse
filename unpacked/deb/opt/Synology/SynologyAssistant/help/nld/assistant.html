@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="img-no-display">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css"/>
+<script src="../../../../help/scrollbar/flexcroll.js" type="text/javascript"></script>
+<script src="../../../../help/scrollbar/initFlexcroll.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>Synology Assistant</h1>
+<p>Synology Assistant is een gebruiksvriendelijke tool voor het beheren van opslagsystemen in het lokale netwerk (LAN), vooral wanneer u meerdere apparaten binnen het LAN gebruikt.</p>
+<p>Om Synology Assistant op uw computer te downloaden en te installeren, gaat u naar het <a href="https://www.synology.com/support/download" target="_blank">Downloadcentrum</a> en selecteert u uw model. Ga vervolgens naar het tabblad <b>Bureaubladhulpprogramma’s</b> om Synology Assistant te vinden.
+
+<h2><a name="Basic Control"></a>Basisbediening</h2>
+<p>Synology Assistant draait op de achtergrond wanneer het is geminimaliseerd naar de taakbalk. Klik met de rechtermuisknop op het pictogram voor de volgende opties:
+	<ul>
+<li>Printers koppelen/ontkoppelen: maximaal 2 printers</li>
+<li>Assistant openen/sluiten</li>
+</ul>
+</p>
+<h2><a name="management"></a>Beheer</h2>
+<h4>Opslagsystemen zoeken in LAN:</h4>
+<p>Klik op <b>Zoeken</b> om de lijst met opslagsystemen in uw LAN te vernieuwen.</p>
+<h4>Verbinden met een server:</h4>
+<p>U kunt op een van de volgende manieren verbinding maken met uw server:
+	<ul>
+<li>Selecteer een server en klik op <b>Verbinden</b>.</li>
+<li>Dubbelklik op een server.</li>
+</ul>
+</p>
+<h4>Een station koppelen:</h4>
+<p>Klik op <b>Station koppelen</b> om een gedeelde map als netwerkschijf voor lokaal gebruik te koppelen.</p>
+<h4>WOL instellen:</h4>
+<p>U kunt Wake on LAN (WOL) instellen om uw Synology-opslagsystemen op afstand te wekken als u deze functie hebt ingeschakeld in <b>Configuratiescherm</b> &gt; <b>Hardware en energie</b> &gt; <b>Algemeen</b>. Selecteer een server uit de lijst en klik op <b>WOL instellen</b>. Raadpleeg voor meer informatie de sectie <a href="#wol">WOL</a>.</p>
+<div class="section">
+<h4>Opmerking:</h4>
+<p>De opties voor stationkoppeling en WOL zijn niet beschikbaar als uw Synology-apparaat deze functies niet ondersteunt.</p>
+</div>
+<h2>Status</h2>
+<p>In deze tabel staan de apparaatstatussen in Synology Assistant en wordt uitgelegd wat elke status betekent.
+	<table cellpadding="0" cellspacing="1" width="100%">
+<tbody>
+<tr>
+<th align="center" width="25%">Status</th>
+<th align="center" width="75%">Statusindicatie</th>
+</tr>
+<tr>
+<td align="center">Opstarten</td>
+<td align="left">Systeem is aan het opstarten.</td>
+</tr>
+<tr>
+<td align="center">Voortgang controleren</td>
+<td align="left">Systeem wordt geïnstalleerd of geconfigureerd. Klik om de voortgang te controleren.</td>
+</tr>
+<tr>
+<td align="center">Quota controleren</td>
+<td align="left">Systeem controleert de schijfquota. Dit kan het gevolg zijn van een onjuiste afsluiting.</td>
+</tr>
+<tr>
+<td align="center">Bestandssysteem controleren (X minuten resterend)</td>
+<td align="left">Systeem controleert het bestandssysteem. Het proces wordt afgerond in het weergegeven aantal minuten. Dit gebeurt meestal wanneer het systeem fouten in het bestandssysteem detecteert en u vraagt een controle uit te voeren.</td>
+</tr>
+<tr>
+<td align="center">Configuratiefout</td>
+<td align="left">Er is een fout opgetreden tijdens de configuratie. Dubbelklik op de server om de instellingen opnieuw toe te passen.</td>
+</tr>
+<tr>
+<td align="center">Configuratie verloren</td>
+<td align="left">Dit gebeurt meestal na een <a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">Modus 2-reset</a>, door de RESET-knop op het apparaat ingedrukt te houden. U kunt dubbelklikken op de server en het besturingssysteem (OS) opnieuw installeren om opnieuw te beginnen zonder dat de gegevens in het volume worden beïnvloed. Als u de RESET-knop niet hebt ingedrukt, controleer dan <a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">andere mogelijke oorzaken</a> voor dit foutbericht.</td>
+</tr>
+<tr>
+<td align="center">Verbinding mislukt</td>
+<td align="left">Netwerkconfiguratiefout. Dubbelklik op de server of klik op <b>Instellen</b> om de netwerkinstellingen te configureren.</td>
+</tr>
+<tr>
+<td align="center">Verbindingsstatus ophalen</td>
+<td align="left">Systeem controleert de verbindingsstatus.</td>
+</tr>
+<tr>
+<td align="center">Migreerbaar</td>
+<td align="left">Systeemconfiguraties op de schijven kunnen naar dit apparaat worden gemigreerd. Dit geeft meestal aan dat de OS-versie op het moederbord nieuwer is dan de OS-versie op de schijven. Dit komt vaak voor na RMA-service. Dubbelklik op de server om het migratieproces te voltooien.</td>
+</tr>
+<tr>
+<td align="center">N/B</td>
+<td align="left">WOL is ingesteld, maar de huidige status is onbekend. Raadpleeg de sectie <a href="#wol">WOL</a> voor meer informatie.</td>
+</tr>
+<tr>
+<td align="center">Niet geconfigureerd</td>
+<td align="left">De initiële OS-configuraties (d.w.z. admin-wachtwoord) na installatie zijn niet voltooid. Dubbelklik op de server om de configuratie af te ronden.</td>
+</tr>
+<tr>
+<td align="center">Niet geïnstalleerd</td>
+<td align="left">Mogelijke oorzaken: er zijn geen schijven gedetecteerd op uw server; het OS is niet geïnstalleerd; het OS is niet gedetecteerd op de schijven; of u hebt op <b>Alle gegevens wissen</b> geklikt in <b>Configuratiescherm</b> &gt; <b>Bijwerken en herstellen</b> &gt; <b>Systeemreset</b>.<br/>Oplossing: Zorg ervoor dat de schijven gezond zijn, correct zijn geplaatst en door de server kunnen worden gedetecteerd. Dubbelklik vervolgens op de server om de installatie van het OS te starten. Als het OS al op de schijven was geïnstalleerd en u de schijven al een tijd gebruikt, geeft dit bericht aan dat de server de OS-gegevens op de schijven niet kan herkennen. Annuleer in dat geval de installatie, schakel de server uit, <a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">lees waarom de schijven niet worden herkend</a> en <a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">voer diagnostische tests uit</a> op een computer om de gezondheid van de schijven te controleren.</td>
+</tr>
+<tr>
+<td align="center">Offline</td>
+<td align="left">Systeem is offline.</td>
+</tr>
+<tr>
+<td align="center">Geheugentest uitvoeren (X%)</td>
+<td align="left">De voortgang van de geheugentest is X%. Als u wordt gevraagd een geheugentest uit te voeren, doe dit dan minstens 3 keer. De testresultaten worden opgeslagen in het systeemlogboek. <a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">Genereer een debug.dat-log</a> en voeg deze toe aan het supportticket zodat Synology onderzoek kan doen.</td>
+</tr>
+<tr>
+<td align="center">Gereed</td>
+<td align="left">Systeem is geïnstalleerd en klaar voor gebruik. Dubbelklik op de server of klik op <b>Verbinden</b> om toegang te krijgen tot de server.</td>
+</tr>
+<tr>
+<td align="center">Herstelbaar</td>
+<td align="left">Systeem is herstelbaar. Dit geeft meestal aan dat de OS-versie op het moederbord ouder is dan de OS-versie op de schijven. Dit komt vaak voor na RMA-service. Dubbelklik op de server om het herstelproces te voltooien.</td>
+</tr>
+<tr>
+<td align="center">Services starten</td>
+<td align="left">Systeem is services aan het starten. Het kan tot 10 minuten duren voordat alle services volledig zijn gestart.</td>
+</tr>
+<tr>
+<td align="center">Upgraden</td>
+<td align="left">Het apparaat werkt het OS bij. Wacht tot het updateproces is voltooid.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<h2><a name="wol"></a>WOL</h2>
+<h4>WOL instellen:</h4>
+<ol>
+<li>Ga naar <b>Configuratiescherm</b> &gt; <b>Hardware en energie</b> &gt; <b>Algemeen</b> en schakel WOL in.</li>
+<li>Ga in Synology Assistant naar het tabblad <b>Beheer</b>. Selecteer een Synology NAS en klik op <b>WOL instellen</b> om het MAC-adres te bekijken dat beschikbaar is voor WOL.</li>
+<li>Na de installatie verandert de <b>WOL-status</b> van de server op het tabblad <b>Beheer</b> naar "WOL".</li>
+</ol>
+<div class="section">
+<h4>Opmerking:</h4>
+<ol>
+<li>De WOL-functie wordt alleen ondersteund op sommige Synology NAS-modellen. Raadpleeg de <a href="https://www.synology.com/support/download" target="_blank">producthandleiding</a> van uw server voor meer informatie.</li>
+<li>U kunt ook met de rechtermuisknop op een server klikken en <b>WOL</b> &gt; <b>Instellen</b> selecteren.</li>
+</ol>
+</div>
+<h4>Een server wekken:</h4>
+<ol>
+<li>Klik met de rechtermuisknop op een server en klik op <b>WOL</b> &gt; <b>Wekken</b>.</li>
+<li>De <b>WOL-status</b> van de server verandert naar "Voortgang X%", wat de voortgang van het wekken aangeeft.</li>
+<li>Wanneer WOL is voltooid, verandert de WOL-status naar "WOL". Raadpleeg voor meer informatie over WOL-statussen de volgende tabel.</li>
+<table cellpadding="0" cellspacing="1" width="100%">
+<tr>
+<th align="center" width="25%">WOL-status</th>
+<th align="center" width="75%">Statusindicatie</th>
+</tr>
+<tr>
+<td align="center">WOL</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL is ingesteld.</li>
+<li>Server is ingeschakeld.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">--</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL is niet ingesteld.</li>
+<li>Server ondersteunt de WOL-functie niet.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">Voortgang X%</td>
+<td align="left">Server wordt ingeschakeld. Voortgang van het wekken is X%.</td>
+</tr>
+<tr>
+<td align="center">Uit</td>
+<td align="left">Server is uitgeschakeld.</td>
+</tr>
+<tr>
+<td align="center">N/B</td>
+<td align="left">WOL is ingesteld, maar de huidige status is onbekend.</td>
+</tr>
+</table>
+</ol>
+<h4>WOL uitschakelen voor een server:</h4>
+<ol>
+<li>Klik met de rechtermuisknop op een server en klik op <b>WOL</b> &gt; <b>Verwijderen</b>.</li>
+<li>De <b>WOL-status</b> van de server verandert naar "--".</li>
+</ol>
+<h2><a name="Printer Device"></a>Printerapparaat</h2>
+<p>In Synology Assistant kunt u printers die op uw Synology NAS zijn aangesloten centraal beheren op het tabblad <b>Printerapparaat</b>. Zowel basis- als multifunctionele printers worden ondersteund. Volg deze instructies om een printer die via Synology NAS in het LAN is aangesloten te delen via Synology Assistant.</p>
+<p>Let op: printerapparaten worden alleen ondersteund op sommige Synology NAS-modellen met DSM. Raadpleeg de <a href="https://www.synology.com/support/download" target="_blank">producthandleiding</a> van uw server voor meer informatie.</p>
+<h4>Een printer toevoegen:</h4>
+<ol>
+<li>Sluit de printer aan op uw Synology NAS.</li>
+<li>Stel de printermodus in via <b>Configuratiescherm</b> &gt; <b>Externe apparaten</b>. Hier wordt een lijst met aangesloten printers weergegeven.</li>
+<li>Selecteer de printer, klik op <b>USB-printerbeheer</b> en kies <b>Printer instellen</b> om de bedrijfsmodus voor uw printer te selecteren. Kies <b>Netwerkprinter</b> als u alleen wilt afdrukken. Kies <b>Netwerk MFP</b>* als u wilt afdrukken, scannen of faxen.</li>
+<li>Ga in Synology Assistant naar het tabblad <b>Printerapparaat</b>. Klik op <b>Toevoegen</b> en volg de installatiewizard om de printer aan uw computer toe te voegen. Als u de printer voor het eerst toevoegt, zorg dan dat u het printerstuurprogramma bij de hand hebt voor installatie.</li>
+</ol>
+<h4>Een printer koppelen/ontkoppelen:</h4>
+<p>Bij afdrukken en faxen kunt u deze handelingen uitvoeren zonder de printer handmatig te koppelen in Synology Assistant. Wilt u echter de scannerfunctie gebruiken of faxen ontvangen op een multifunctionele printer, dan moet u de printer koppelen om te voorkomen dat afdruktaken door andere gebruikers worden onderbroken.</p>
+<p>Wanneer een printer handmatig is gekoppeld in Synology Assistant, kunnen andere gebruikers die dezelfde printer in het LAN delen geen toegang krijgen tot het apparaat. Ontkoppel de printer als u klaar bent met uw afdruktaak.</p>
+<p>U kunt deze instructies volgen om de printer te koppelen of te ontkoppelen.</p>
+<ol>
+<li>Ga in Synology Assistant naar het tabblad <b>Printerapparaat</b>.</li>
+<li>Selecteer de printer die u wilt koppelen en klik op <b>Koppelen</b>. Synology Assistant maakt verbinding met de printer. In de statuskolom wordt de status weergegeven.</li>
+<li>Als een printer is gekoppeld, verandert de knop <b>Koppelen</b> in <b>Ontkoppelen</b>. U kunt hierop klikken om de gekoppelde printer te ontkoppelen.</li>
+</ol>
+<div class="section">
+<h4>Opmerking:</h4>
+<ul>
+<li>Als de status van de printer in de statuskolom <b>Beschikbaar</b> is, kunt u de printer voor eigen gebruik koppelen.</li>
+<li>Als de status <b>Gekoppeld</b> is, is de printer al aan uw computer gekoppeld.</li>
+<li>Als de printer tijdelijk niet beschikbaar is, wordt u door op <b>Koppelen</b> te klikken aan de wachtlijst voor verbinding toegevoegd.</li>
+</ul>
+</div>
+<h4>Een printer verwijderen:</h4>
+<ol>
+<li>Selecteer de printer die u uit de lijst wilt verwijderen.</li>
+<li>Klik op <b>Verwijderen</b> om de printer uit de lijst te verwijderen.</li>
+</ol>
+<h4>Printerinformatie bewerken:</h4>
+<p>Wanneer Synology Assistant het IP-adres van uw printer niet automatisch kan detecteren, kunt u het IP hier handmatig instellen.</p>
+<ol>
+<li>Selecteer de printer die u wilt bewerken.</li>
+<li>Klik op <b>Bewerken</b> en voer het juiste IP-adres van uw printer in.</li>
+</ol>
+<div class="section">
+<h4>Opmerking:</h4>
+<ul>
+<li>Netwerk MFP is alleen voor Windows-gebruikers.</li>
+<li>Raadpleeg vóór het instellen van een printer de lijst met <a href="https://www.synology.com/compatibility?search_by=products&amp;model=&amp;category=usb_printers&amp;p=1" target="_blank">compatibele printers</a>.</li>
+<li>USB-hub wordt niet ondersteund bij het delen van een printer.</li>
+<li>De geheugenkaartfunctie van de aangesloten printer wordt niet ondersteund.</li>
+</ul>
+</div>
+<h2><a name="preferences"></a>Voorkeuren</h2>
+<p>U kunt op het tandwielpictogram met het label <b>Voorkeuren</b> rechtsboven klikken om de volgende instellingen te configureren.</p>
+<ul>
+<li><b>Standaard functietabblad</b>: Selecteer de functietabbladen die in Synology Assistant moeten worden weergegeven.</li>
+<li><b>Taal</b>: Kies een standaardtaal voor de gebruikersinterface van Synology Assistant. U moet Synology Assistant opnieuw starten om de nieuwe instelling toe te passen.</li>
+<li><b>Geheugentest</b>: Als u het selectievakje inschakelt, verschijnt de knop <b>Geheugentest</b> op het tabblad <b>Beheer</b> de volgende keer dat u Synology Assistant start. U kunt een server selecteren en op de knop klikken om een geheugendiagnosetest uit te voeren. De server wordt opnieuw opgestart en de test begint. De voortgang van de test wordt weergegeven in de kolom <b>Status</b> van de serverlijst.</li>
+</ul>
+<div class="section">
+<h4>Opmerking:</h4>
+<ul>
+<li>Het kan enige tijd duren om de geheugentest te voltooien, afhankelijk van de fysieke geheugengrootte van uw server. Test bij modellen met dubbele controller slechts één controller tegelijk, zodat het systeem tijdens de test diensten kan blijven leveren.</li>
+<li>Los verbindingsproblemen met uw server via Synology Assistant op met <a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">dit artikel</a>.</li>
+</ul>
+</div>
+</p></body>
+</html>

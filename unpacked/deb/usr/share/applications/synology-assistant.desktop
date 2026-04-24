@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Synology Assistant
+Comment=Synology Assistant
+Exec=/opt/Synology/SynologyAssistant/SynologyAssistant
+Icon=/opt/Synology/SynologyAssistant/images/finder.png
+Terminal=false
+Type=Application
+Categories=Network;
+

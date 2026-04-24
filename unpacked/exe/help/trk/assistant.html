@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="img-no-display">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css"/>
+<script src="../../../../help/scrollbar/flexcroll.js" type="text/javascript"></script>
+<script src="../../../../help/scrollbar/initFlexcroll.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>Synology Assistant</h1>
+<p>Synology Assistant, yerel alan ağında (LAN) depolama sistemlerini yönetmek için kullanımı kolay bir araçtır; özellikle LAN içinde birden fazla cihazınız olduğunda kullanışlıdır.</p>
+<p>Bilgisayarınıza Synology Assistant'ı indirmek ve kurmak için <a href="https://www.synology.com/support/download" target="_blank">İndirme Merkezi</a>'ne gidin ve modelinizi seçin. Ardından, Synology Assistant'ı bulmak için <b>Masaüstü Yardımcı Programları</b> sekmesine gidin.
+
+<h2><a name="Basic Control"></a>Temel Kontrol</h2>
+<p>Synology Assistant, sistem tepsisine küçültüldüğünde arka planda çalışır. Aşağıdaki seçenekler için simgeye sağ tıklayın:
+	<ul>
+<li>Yazıcıları Bağla/Bırak: En fazla 2 yazıcı</li>
+<li>Assistant'ı Aç/Kapat</li>
+</ul>
+</p>
+<h2><a name="management"></a>Yönetim</h2>
+<h4>LAN'deki depolama sistemlerini aramak için:</h4>
+<p>LAN'inizdeki depolama sistemleri listesini yenilemek için <b>Ara</b>'ya tıklayın.</p>
+<h4>Bir sunucuya bağlanmak için:</h4>
+<p>Sunucunuza aşağıdaki yöntemlerden biriyle bağlanabilirsiniz:
+	<ul>
+<li>Bir sunucu seçin ve <b>Bağlan</b>'a tıklayın.</li>
+<li>Bir sunucuya çift tıklayın.</li>
+</ul>
+</p>
+<h4>Bir sürücüye bağlamak için:</h4>
+<p>Yerel erişim için paylaşılan bir klasörü ağ sürücüsü olarak bağlamak için <b>Sürücü Eşleştir</b>'e tıklayın.</p>
+<h4>WOL kurmak için:</h4>
+<p><b>Denetim Masası</b> &gt; <b>Donanım ve Güç</b> &gt; <b>Genel</b> bölümünde bu özelliği etkinleştirdiyseniz, Synology depolama sistemlerinizi uzaktan uyandırmak için Wake on LAN (WOL) kurabilirsiniz. Listeden bir sunucu seçin ve <b>WOL Kurulumu</b>'na tıklayın. Daha fazla bilgi için <a href="#wol">WOL</a> bölümüne bakın.</p>
+<div class="section">
+<h4>Not:</h4>
+<p>Synology cihazınız bu özellikleri desteklemiyorsa, sürücü eşleştirme ve WOL seçenekleri kullanılamaz.</p>
+</div>
+<h2>Durum</h2>
+<p>Bu tablo, Synology Assistant'taki cihaz durumlarını listeler ve her bir durumun ne anlama geldiğini açıklar.
+	<table cellpadding="0" cellspacing="1" width="100%">
+<tbody>
+<tr>
+<th align="center" width="25%">Durum</th>
+<th align="center" width="75%">Durum Açıklaması</th>
+</tr>
+<tr>
+<td align="center">Yeniden başlatıyor</td>
+<td align="left">Sistem başlatılıyor.</td>
+</tr>
+<tr>
+<td align="center">İlerlemeyi kontrol et</td>
+<td align="left">Sistem yükleniyor veya yapılandırılıyor. İlerlemeyi kontrol etmek için tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Kotayı kontrol ediyor</td>
+<td align="left">Sistem sürücü kotasını kontrol ediyor. Bu, uygunsuz bir kapatmanın sonucu olabilir.</td>
+</tr>
+<tr>
+<td align="center">Dosya sistemi kontrol ediliyor (X dakika kaldı)</td>
+<td align="left">Sistem dosya sistemini kontrol ediyor. İşlem, görüntülenen dakika sayısı kadar sürecektir. Bu genellikle sistem dosya sistemi hatalarını algıladığında ve bir dosya sistemi kontrolü yapmanızı istediğinde meydana gelir.</td>
+</tr>
+<tr>
+<td align="center">Yapılandırma hatası</td>
+<td align="left">Yapılandırma sırasında bir hata oluştu. Ayarları yeniden uygulamak için sunucuya çift tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Yapılandırma kayboldu</td>
+<td align="left">Bu genellikle <a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">Mod 2 Sıfırlama</a> işleminden sonra, cihazdaki RESET düğmesine basılı tutularak gerçekleşir. Birim içindeki verileri etkilemeden temiz bir başlangıç yapmak için sunucuya çift tıklayarak işletim sistemini yeniden yükleyebilirsiniz. RESET düğmesine basmadıysanız, bu hata mesajı için <a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">diğer olası nedenlere</a> bakın.</td>
+</tr>
+<tr>
+<td align="center">Bağlantı başarısız</td>
+<td align="left">Ağ yapılandırma hatası. Ağ ayarlarını yapılandırmak için sunucuya çift tıklayın veya <b>Ayarla</b>'ya tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Bağlantı durumu alınıyor</td>
+<td align="left">Sistem bağlantı durumunu kontrol ediyor.</td>
+</tr>
+<tr>
+<td align="center">Taşınabilir</td>
+<td align="left">Sürücülerdeki sistem yapılandırmaları bu cihaza taşınabilir. Bu genellikle anakartta kaydedilen işletim sistemi sürümünün, sürücülerdeki sürümden daha yeni olduğunu gösterir. Bu durum genellikle bir RMA hizmetinden sonra meydana gelir. Taşıma işlemini tamamlamak için sunucuya çift tıklayın.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL kurulu ancak mevcut durum bilinmiyor. Daha fazla bilgi için <a href="#wol">WOL</a> bölümüne bakın.</td>
+</tr>
+<tr>
+<td align="center">Yapılandırılmamış</td>
+<td align="left">Kurulumdan sonra ilk işletim sistemi yapılandırmaları (ör. admin parolası) tamamlanmamış. Yapılandırmayı tamamlamak için sunucuya çift tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Yüklenmedi</td>
+<td align="left">Olası nedenler: Sunucunuzda sürücü algılanmadı; işletim sistemi yüklenmedi; işletim sistemi sürücülerde algılanmadı; veya <b>Tüm Verileri Sil</b> seçeneğini <b>Denetim Masası</b> &gt; <b>Güncelle &amp; Geri Yükle</b> &gt; <b>Sistem Sıfırlama</b> altında tıkladınız.<br/>Çözüm: Sürücülerin sağlıklı, düzgün takılmış ve sunucu tarafından algılanabilir olduğundan emin olun. Ardından, işletim sistemini yüklemeye başlamak için sunucuya çift tıklayın. Eğer işletim sistemi zaten sürücülere yüklüyse ve bir süredir bu sürücüleri kullanıyorsanız, bu mesaj sunucunun sürücülerdeki işletim sistemi verilerini tanıyamadığını gösterir. Bu durumda, kurulumu iptal edin, sunucuyu kapatın, <a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">sürücülerin neden tanınmadığını öğrenin</a> ve sürücülerin sağlığını kontrol etmek için bir bilgisayarda <a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">tanı testleri</a> çalıştırın.</td>
+</tr>
+<tr>
+<td align="center">Çevrimdışı</td>
+<td align="left">Sistem çevrimdışı.</td>
+</tr>
+<tr>
+<td align="center">Bellek Testi Yapılıyor (X%)</td>
+<td align="left">Bellek testinin ilerlemesi X%. Bir bellek testi yapmanız istenirse, testi en az 3 kez çalıştırın. Test sonuçları sistem günlüğüne kaydedilecektir. Synology'nin incelemesi için lütfen <a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">debug.dat günlüğü oluşturun</a> ve destek talebine ekleyin.</td>
+</tr>
+<tr>
+<td align="center">Hazır</td>
+<td align="left">Sistem yüklendi ve kullanıma hazır. Sunucuya erişmek için sunucuya çift tıklayın veya <b>Bağlan</b>'a tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Kurtarılabilir</td>
+<td align="left">Sistem kurtarılabilir. Bu genellikle anakartta kaydedilen işletim sistemi sürümünün, sürücülerdeki sürümden daha eski olduğunu gösterir. Bu durum genellikle bir RMA hizmetinden sonra meydana gelir. Kurtarma işlemini tamamlamak için sunucuya çift tıklayın.</td>
+</tr>
+<tr>
+<td align="center">Servisler başlatılıyor</td>
+<td align="left">Sistem servisleri başlatıyor. Tüm servislerin tamamen başlatılması 10 dakikaya kadar sürebilir.</td>
+</tr>
+<tr>
+<td align="center">Güncelleniyor</td>
+<td align="left">Cihaz işletim sistemini güncelliyor. Lütfen güncelleme işleminin tamamlanmasını bekleyin.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<h2><a name="wol"></a>WOL</h2>
+<h4>WOL kurmak için:</h4>
+<ol>
+<li><b>Denetim Masası</b> &gt; <b>Donanım ve Güç</b> &gt; <b>Genel</b> bölümüne gidin ve WOL'ü etkinleştirin.</li>
+<li>Synology Assistant'ta <b>Yönetim</b> sekmesine gidin. Bir Synology NAS seçin ve WOL için mevcut MAC adresini görüntülemek için <b>WOL Kurulumu</b>'na tıklayın.</li>
+<li>Kurulumdan sonra, <b>Yönetim</b> sekmesindeki sunucunun <b>WOL durumu</b> "WOL" olarak değişecektir.</li>
+</ol>
+<div class="section">
+<h4>Not:</h4>
+<ol>
+<li>WOL özelliği yalnızca bazı Synology NAS modellerinde desteklenir. Daha fazla bilgi için sunucunuzun <a href="https://www.synology.com/support/download" target="_blank">ürün kılavuzuna</a> bakın.</li>
+<li>Ayrıca bir sunucuya sağ tıklayarak <b>WOL</b> &gt; <b>Kur</b> seçeneğini de seçebilirsiniz.</li>
+</ol>
+</div>
+<h4>Bir sunucuyu uyandırmak için:</h4>
+<ol>
+<li>Bir sunucuya sağ tıklayın ve <b>WOL</b> &gt; <b>Uyandır</b>'a tıklayın.</li>
+<li>Sunucunun <b>WOL Durumu</b> "İlerleme X%" olarak değişecek ve uyandırma ilerlemesini gösterecektir.</li>
+<li>WOL tamamlandığında, WOL durumu "WOL" olarak değişecektir. WOL durumları hakkında daha fazla bilgi için aşağıdaki tabloya bakın.</li>
+<table cellpadding="0" cellspacing="1" width="100%">
+<tr>
+<th align="center" width="25%">WOL Durumu</th>
+<th align="center" width="75%">Durum Açıklaması</th>
+</tr>
+<tr>
+<td align="center">WOL</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL kuruldu.</li>
+<li>Sunucu açık.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">--</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL kurulmadı.</li>
+<li>Sunucu WOL işlevini desteklemiyor.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">İlerleme X%</td>
+<td align="left">Sunucu açılıyor. Uyandırma ilerlemesi X%.</td>
+</tr>
+<tr>
+<td align="center">Kapalı</td>
+<td align="left">Sunucu kapalı.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL kurulu ancak mevcut durum bilinmiyor.</td>
+</tr>
+</table>
+</ol>
+<h4>Bir sunucu için WOL'ü devre dışı bırakmak için:</h4>
+<ol>
+<li>Bir sunucuya sağ tıklayın ve <b>WOL</b> &gt; <b>Kaldır</b>'a tıklayın.</li>
+<li>Sunucunun <b>WOL durumu</b> "--" olarak değişecektir.</li>
+</ol>
+<h2><a name="Printer Device"></a>Yazıcı Cihazı</h2>
+<p>Synology Assistant'ta, Synology NAS'ınıza bağlı yazıcıları <b>Yazıcı Cihazı</b> sekmesinden merkezi olarak yönetebilirsiniz. Hem temel hem de çok işlevli yazıcılar desteklenir. Synology Assistant ile LAN'da Synology NAS'a bağlı bir yazıcıyı paylaşmak için aşağıdaki talimatları izleyin.</p>
+<p>Yazıcı cihazlarının yalnızca DSM çalıştıran bazı Synology NAS modellerinde desteklendiğini unutmayın. Daha fazla bilgi için sunucunuzun <a href="https://www.synology.com/support/download" target="_blank">ürün kılavuzuna</a> bakın.</p>
+<h4>Bir yazıcı eklemek için:</h4>
+<ol>
+<li>Yazıcıyı Synology NAS'ınıza bağlayın.</li>
+<li><b>Denetim Masası</b> &gt; <b>Harici Aygıtlar</b> bölümünde yazıcı modunu ayarlayın. Bağlı yazıcıların listesi burada görüntülenir.</li>
+<li>Yazıcıyı seçin, <b>USB Yazıcı Yöneticisi</b>'ne tıklayın ve yazıcınız için çalışma modunu seçmek üzere <b>Yazıcıyı Kur</b>'u seçin. Yalnızca yazdırma işlevini kullanıyorsanız <b>Ağ Yazıcısı</b> modunu seçin. Yazdırma, tarama veya faks işlevlerinden birini kullanmak istiyorsanız <b>Network MFP</b>* seçin.</li>
+<li>Synology Assistant'ta <b>Yazıcı Cihazı</b> sekmesine gidin. <b>Ekle</b>'ye tıklayın ve yazıcıyı bilgisayarınıza eklemek için Kurulum Sihirbazı'nı izleyin. Yazıcıyı ilk kez ekliyorsanız, yazıcı sürücünüzün kurulum için hazır olduğundan emin olun.</li>
+</ol>
+<h4>Bir yazıcıyı bağlamak/bırakmak için:</h4>
+<p>Yazdırma ve faks gönderme işlemlerini, Synology Assistant'ta yazıcıyı manuel olarak bağlamadan gerçekleştirebilirsiniz. Ancak, çok işlevli bir yazıcıda tarayıcı işlevini kullanmak veya faks almak istiyorsanız, diğer kullanıcıların yazdırma işlerini bölmemesi için yazıcıyı bağlamanız gerekir.</p>
+<p>Bir yazıcı Synology Assistant'ta manuel olarak bağlandığında, LAN'da aynı yazıcıyı paylaşan diğer kullanıcılar cihaza erişemez. Yazdırma işiniz bittiğinde yazıcıyı bırakmayı unutmayın.</p>
+<p>Yazıcıyı bağlamak veya bırakmak için bu talimatları izleyebilirsiniz.</p>
+<ol>
+<li>Synology Assistant'ta <b>Yazıcı Cihazı</b> sekmesine gidin.</li>
+<li>Bağlamak istediğiniz yazıcıyı seçin ve <b>Bağla</b>'ya tıklayın. Synology Assistant yazıcıya bağlanmaya başlayacaktır. Durum sütunu işlem durumunu gösterecektir.</li>
+<li>Bir yazıcı bağlandığında, <b>Bağla</b> düğmesi <b>Bırak</b> olarak değişir. Bağlı yazıcıyı bırakmak için buna tıklayabilirsiniz.</li>
+</ol>
+<div class="section">
+<h4>Not:</h4>
+<ul>
+<li>Durum sütununda, yazıcının durumu <b>Kullanılabilir</b> ise, yazıcıyı yalnızca kendi kullanımınız için bağlayabilirsiniz.</li>
+<li>Durum <b>Bağlı</b> ise, yazıcı zaten bilgisayarınıza bağlıdır.</li>
+<li>Yazıcı şu anda kullanılamıyorsa, <b>Bağla</b>'ya tıklamak sizi bağlantı için bekleme listesine ekler.</li>
+</ul>
+</div>
+<h4>Bir yazıcıyı kaldırmak için:</h4>
+<ol>
+<li>Listeden kaldırmak istediğiniz yazıcıyı seçin.</li>
+<li>Yazıcıyı listeden silmek için <b>Kaldır</b>'a tıklayın.</li>
+</ol>
+<h4>Yazıcı bilgilerini düzenlemek için:</h4>
+<p>Synology Assistant yazıcınızın IP'sini otomatik olarak algılayamazsa, burada IP'yi manuel olarak ayarlayabilirsiniz.</p>
+<ol>
+<li>Düzenlemek istediğiniz yazıcıyı seçin.</li>
+<li><b>Düzenle</b>'ye tıklayın ve yazıcınızın doğru IP'sini girin.</li>
+</ol>
+<div class="section">
+<h4>Not:</h4>
+<ul>
+<li>Network MFP yalnızca Windows kullanıcıları içindir.</li>
+<li>Bir yazıcı kurmadan önce, <a href="https://www.synology.com/compatibility?search_by=products&amp;model=&amp;category=usb_printers&amp;p=1" target="_blank">uyumlu yazıcılar</a> listesine bakın.</li>
+<li>Paylaşım için bir yazıcı bağlanırken USB hub desteklenmez.</li>
+<li>Bağlı yazıcının hafıza kartı işlevi desteklenmez.</li>
+</ul>
+</div>
+<h2><a name="preferences"></a>Tercihler</h2>
+<p>Sağ üst köşedeki <b>Tercihler</b> dişli simgesine tıklayarak aşağıdaki ayarları yapılandırabilirsiniz.</p>
+<ul>
+<li><b>Varsayılan İşlevler Sekmesi</b>: Synology Assistant'ta görünecek işlev sekmelerini seçin.</li>
+<li><b>Dil</b>: Synology Assistant'ın kullanıcı arayüzü için varsayılan bir dil seçin. Yeni ayarın etkin olması için Synology Assistant'ı yeniden başlatmanız gerekir.</li>
+<li><b>Bellek Testi</b>: Onay kutusunu seçerseniz, bir sonraki Synology Assistant başlatışınızda <b>Bellek Testi</b> düğmesi <b>Yönetim</b> sekmesinde görünecektir. Bir sunucu seçip düğmeye tıklayarak bellek tanı testi yapabilirsiniz. Sunucu yeniden başlatılacak ve test başlayacaktır. Testin ilerlemesi sunucu listesinin <b>Durum</b> sütununda gösterilecektir.</li>
+</ul>
+<div class="section">
+<h4>Not:</h4>
+<ul>
+<li>Bellek testinin tamamlanması, sunucunuzun fiziksel bellek boyutuna bağlı olarak biraz zaman alabilir. Çift denetleyicili modellerde, sistemin test sırasında hizmet vermeye devam edebilmesi için aynı anda yalnızca bir denetleyiciyi test edin.</li>
+<li>Synology Assistant ile sunucunuza bağlanma sorunlarını <a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">bu makale</a> ile giderin.</li>
+</ul>
+</div>
+</p></body>
+</html>

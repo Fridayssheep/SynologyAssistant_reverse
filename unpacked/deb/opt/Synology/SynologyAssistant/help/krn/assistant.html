@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="img-no-display">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css"/>
+<script src="../../../../help/scrollbar/flexcroll.js" type="text/javascript"></script>
+<script src="../../../../help/scrollbar/initFlexcroll.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>Synology Assistant</h1>
+<p>Synology Assistant는 로컬 네트워크(LAN)에서 스토리지 시스템을 관리하기 위한 사용이 간편한 도구로, 특히 여러 대의 장치가 LAN 내에서 작동할 때 유용합니다.</p>
+<p>컴퓨터에 Synology Assistant를 다운로드하여 설치하려면 <a href="https://www.synology.com/support/download" target="_blank">다운로드 센터</a>로 이동하여 모델을 선택하세요. 다음으로 <b>데스크톱 유틸리티</b> 탭에서 Synology Assistant를 찾을 수 있습니다.
+
+<h2><a name="Basic Control"></a>기본 제어</h2>
+<p>Synology Assistant는 최소화 시 시스템 트레이에서 백그라운드로 실행됩니다. 아이콘을 마우스 오른쪽 버튼으로 클릭하면 다음 옵션을 사용할 수 있습니다:
+	<ul>
+<li>프린터 연결/해제: 최대 2대의 프린터</li>
+<li>Assistant 열기/닫기</li>
+</ul>
+</p>
+<h2><a name="management"></a>관리</h2>
+<h4>LAN에서 스토리지 시스템을 검색하려면:</h4>
+<p>LAN 내 스토리지 시스템 목록을 새로 고치려면 <b>검색</b>을 클릭하세요.</p>
+<h4>서버에 연결하려면:</h4>
+<p>다음 두 가지 방법 중 하나로 서버에 연결할 수 있습니다:
+	<ul>
+<li>서버를 선택하고 <b>연결</b>을 클릭합니다.</li>
+<li>서버를 더블 클릭합니다.</li>
+</ul>
+</p>
+<h4>드라이브를 매핑하려면:</h4>
+<p>공유 폴더를 로컬에서 액세스할 수 있는 네트워크 드라이브로 매핑하려면 <b>드라이브 매핑</b>을 클릭하세요.</p>
+<h4>WOL을 설정하려면:</h4>
+<p><b>제어판</b> &gt; <b>하드웨어 및 전원</b> &gt; <b>일반</b>에서 이 기능을 활성화한 경우, Synology 스토리지 시스템을 원격으로 깨우기 위해 Wake on LAN(WOL)을 설정할 수 있습니다. 목록에서 서버를 선택하고 <b>WOL 설정</b>을 클릭하세요. 자세한 내용은 <a href="#wol">WOL</a> 섹션을 참조하세요.</p>
+<div class="section">
+<h4>참고:</h4>
+<p>Synology 장치가 해당 기능을 지원하지 않는 경우 드라이브 매핑 및 WOL 옵션을 사용할 수 없습니다.</p>
+</div>
+<h2>상태</h2>
+<p>이 표는 Synology Assistant에서 장치 상태를 나열하고 각 상태가 의미하는 바를 설명합니다.
+	<table cellpadding="0" cellspacing="1" width="100%">
+<tbody>
+<tr>
+<th align="center" width="25%">상태</th>
+<th align="center" width="75%">상태 설명</th>
+</tr>
+<tr>
+<td align="center">부팅 중</td>
+<td align="left">시스템이 부팅 중입니다.</td>
+</tr>
+<tr>
+<td align="center">진행 상황 확인</td>
+<td align="left">시스템이 설치 또는 구성 중입니다. 클릭하여 진행 상황을 확인하세요.</td>
+</tr>
+<tr>
+<td align="center">할당량 확인 중</td>
+<td align="left">시스템이 드라이브 할당량을 확인 중입니다. 이는 잘못된 종료로 인해 발생할 수 있습니다.</td>
+</tr>
+<tr>
+<td align="center">파일 시스템 확인 중(X분 남음)</td>
+<td align="left">시스템이 파일 시스템을 확인 중입니다. 이 과정은 표시된 분 내에 완료됩니다. 일반적으로 시스템이 파일 시스템 오류를 감지하고 파일 시스템 검사를 수행하라는 메시지가 표시될 때 발생합니다.</td>
+</tr>
+<tr>
+<td align="center">구성 오류</td>
+<td align="left">구성 중 오류가 발생했습니다. 서버를 더블 클릭하여 설정을 다시 적용하세요.</td>
+</tr>
+<tr>
+<td align="center">구성 손실</td>
+<td align="left">이 현상은 일반적으로 장치의 RESET 버튼을 길게 눌러 수행하는 <a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">모드 2 리셋</a> 후에 발생합니다. 서버를 더블 클릭하여 운영 체제(OS)를 다시 설치하면 볼륨 내 데이터에 영향을 주지 않고 새로 시작할 수 있습니다. RESET 버튼을 누르지 않았다면, 이 오류 메시지의 <a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">다른 가능한 원인</a>을 확인하세요.</td>
+</tr>
+<tr>
+<td align="center">연결 실패</td>
+<td align="left">네트워크 구성 오류입니다. 서버를 더블 클릭하거나 <b>설정</b>을 클릭하여 네트워크 설정을 구성하세요.</td>
+</tr>
+<tr>
+<td align="center">연결 상태 확인 중</td>
+<td align="left">시스템이 연결 상태를 확인 중입니다.</td>
+</tr>
+<tr>
+<td align="center">마이그레이션 가능</td>
+<td align="left">드라이브의 시스템 구성을 이 장치로 마이그레이션할 수 있습니다. 이는 일반적으로 메인보드에 기록된 OS 버전이 드라이브의 OS 버전보다 최신일 때 발생합니다. RMA 서비스 이후에 발생할 수 있습니다. 서버를 더블 클릭하여 마이그레이션을 완료하세요.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL이 설정되어 있지만 현재 상태는 알 수 없습니다. 자세한 내용은 <a href="#wol">WOL</a> 섹션을 참조하세요.</td>
+</tr>
+<tr>
+<td align="center">미구성</td>
+<td align="left">설치 후 초기 OS 구성(예: admin 비밀번호)이 완료되지 않았습니다. 서버를 더블 클릭하여 구성을 마치세요.</td>
+</tr>
+<tr>
+<td align="center">미설치</td>
+<td align="left">가능한 원인: 서버에서 드라이브가 감지되지 않음, OS가 설치되지 않음, 드라이브에서 OS가 감지되지 않음, 또는 <b>제어판</b> &gt; <b>업데이트 및 복원</b> &gt; <b>시스템 재설정</b>에서 <b>모든 데이터 지우기</b>를 클릭함.<br/>해결 방법: 드라이브가 정상이고 올바르게 삽입되어 서버에서 감지되는지 확인하세요. 그런 다음 서버를 더블 클릭하여 OS 설치를 시작하세요. 이미 드라이브에 OS가 설치되어 있고 한동안 사용 중이었다면, 이 메시지는 서버가 드라이브의 OS 데이터를 인식하지 못함을 의미합니다. 이 경우 설치를 중단하고 서버를 종료한 후, <a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">드라이브가 인식되지 않는 이유 알아보기</a> 및 <a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">진단 테스트 실행</a>을 통해 드라이브의 상태를 컴퓨터에서 확인하세요.</td>
+</tr>
+<tr>
+<td align="center">오프라인</td>
+<td align="left">시스템이 오프라인 상태입니다.</td>
+</tr>
+<tr>
+<td align="center">메모리 테스트 수행 중(X%)</td>
+<td align="left">메모리 테스트 진행률이 X%입니다. 메모리 테스트를 요청받은 경우 최소 3회 실행하세요. 테스트 결과는 시스템 로그에 저장됩니다. Synology에서 조사할 수 있도록 <a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">debug.dat 로그 생성</a> 후 지원 티켓에 첨부하세요.</td>
+</tr>
+<tr>
+<td align="center">준비 완료</td>
+<td align="left">시스템이 설치되어 사용 준비가 완료되었습니다. 서버를 더블 클릭하거나 <b>연결</b>을 클릭하여 서버에 액세스하세요.</td>
+</tr>
+<tr>
+<td align="center">복구 가능</td>
+<td align="left">시스템을 복구할 수 있습니다. 이는 일반적으로 메인보드에 기록된 OS 버전이 드라이브의 OS 버전보다 오래된 경우 발생합니다. RMA 서비스 이후에 발생할 수 있습니다. 서버를 더블 클릭하여 복구를 완료하세요.</td>
+</tr>
+<tr>
+<td align="center">서비스 시작 중</td>
+<td align="left">시스템이 서비스를 시작 중입니다. 모든 서비스가 완전히 시작되기까지 최대 10분이 소요될 수 있습니다.</td>
+</tr>
+<tr>
+<td align="center">업그레이드 중</td>
+<td align="left">장치가 OS를 업데이트 중입니다. 업데이트가 완료될 때까지 기다려 주세요.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<h2><a name="wol"></a>WOL</h2>
+<h4>WOL을 설정하려면:</h4>
+<ol>
+<li><b>제어판</b> &gt; <b>하드웨어 및 전원</b> &gt; <b>일반</b>으로 이동하여 WOL을 활성화하세요.</li>
+<li>Synology Assistant에서 <b>관리</b> 탭으로 이동합니다. Synology NAS를 선택하고 <b>WOL 설정</b>을 클릭하면 WOL에 사용할 수 있는 MAC 주소를 확인할 수 있습니다.</li>
+<li>설정이 완료되면 <b>관리</b> 탭의 서버 <b>WOL 상태</b>가 "WOL"로 변경됩니다.</li>
+</ol>
+<div class="section">
+<h4>참고:</h4>
+<ol>
+<li>WOL 기능은 일부 Synology NAS 모델에서만 지원됩니다. 자세한 내용은 서버의 <a href="https://www.synology.com/support/download" target="_blank">제품 설명서</a>를 참조하세요.</li>
+<li>서버를 마우스 오른쪽 버튼으로 클릭한 후 <b>WOL</b> &gt; <b>설정</b>을 선택할 수도 있습니다.</li>
+</ol>
+</div>
+<h4>서버를 깨우려면:</h4>
+<ol>
+<li>서버를 마우스 오른쪽 버튼으로 클릭하고 <b>WOL</b> &gt; <b>깨우기</b>를 클릭하세요.</li>
+<li>서버의 <b>WOL 상태</b>가 "진행률 X%"로 변경되어 깨우기 진행 상황을 나타냅니다.</li>
+<li>WOL이 완료되면 WOL 상태가 "WOL"로 변경됩니다. WOL 상태에 대한 자세한 내용은 아래 표를 참조하세요.</li>
+<table cellpadding="0" cellspacing="1" width="100%">
+<tr>
+<th align="center" width="25%">WOL 상태</th>
+<th align="center" width="75%">상태 설명</th>
+</tr>
+<tr>
+<td align="center">WOL</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL이 설정되었습니다.</li>
+<li>서버가 켜져 있습니다.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">--</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL이 설정되지 않았습니다.</li>
+<li>서버가 WOL 기능을 지원하지 않습니다.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">진행률 X%</td>
+<td align="left">서버가 켜지는 중입니다. 깨우기 진행률은 X%입니다.</td>
+</tr>
+<tr>
+<td align="center">꺼짐</td>
+<td align="left">서버가 꺼져 있습니다.</td>
+</tr>
+<tr>
+<td align="center">N/A</td>
+<td align="left">WOL이 설정되어 있지만 현재 상태는 알 수 없습니다.</td>
+</tr>
+</table>
+</ol>
+<h4>서버에서 WOL을 비활성화하려면:</h4>
+<ol>
+<li>서버를 마우스 오른쪽 버튼으로 클릭하고 <b>WOL</b> &gt; <b>제거</b>를 클릭하세요.</li>
+<li>서버의 <b>WOL 상태</b>가 "--"로 변경됩니다.</li>
+</ol>
+<h2><a name="Printer Device"></a>프린터 장치</h2>
+<p>Synology Assistant에서는 <b>프린터 장치</b> 탭에서 Synology NAS에 연결된 프린터를 중앙에서 관리할 수 있습니다. 기본 프린터와 복합기 모두 지원됩니다. Synology Assistant를 통해 LAN에서 Synology NAS에 연결된 프린터를 공유하려면 다음 지침을 따르세요.</p>
+<p>프린터 장치는 DSM이 실행되는 일부 Synology NAS 모델에서만 지원됩니다. 자세한 내용은 서버의 <a href="https://www.synology.com/support/download" target="_blank">제품 설명서</a>를 참조하세요.</p>
+<h4>프린터를 추가하려면:</h4>
+<ol>
+<li>프린터를 Synology NAS에 연결하세요.</li>
+<li><b>제어판</b> &gt; <b>외부 장치</b>에서 프린터 모드를 설정하세요. 연결된 프린터 목록이 여기에 표시됩니다.</li>
+<li>프린터를 선택하고 <b>USB 프린터 관리자</b>를 클릭한 후 <b>프린터 설정</b>을 선택하여 프린터의 동작 모드를 선택하세요. 인쇄 기능만 사용할 경우 <b>네트워크 프린터</b> 모드를 선택하세요. 인쇄, 스캔 또는 팩스 기능을 사용하려면 <b>네트워크 MFP</b>*를 선택하세요.</li>
+<li>Synology Assistant에서 <b>프린터 장치</b> 탭으로 이동합니다. <b>추가</b>를 클릭하고 설치 마법사의 안내에 따라 프린터를 컴퓨터에 추가하세요. 프린터를 처음 추가하는 경우 프린터 드라이버를 미리 준비하세요.</li>
+</ol>
+<h4>프린터 연결/해제 방법:</h4>
+<p>인쇄 및 팩스 전송 시에는 Synology Assistant에서 프린터를 수동으로 연결하지 않아도 작업을 수행할 수 있습니다. 그러나 복합기에서 스캐너 기능을 사용하거나 팩스를 수신하려면, 다른 사용자의 인쇄 작업이 방해받지 않도록 프린터를 연결해야 합니다.</p>
+<p>Synology Assistant에서 프린터를 수동으로 연결하면, LAN에서 동일한 프린터를 공유하는 다른 사용자는 해당 장치에 접근할 수 없습니다. 인쇄 작업이 끝나면 반드시 프린터 연결을 해제하세요.</p>
+<p>다음 지침에 따라 프린터를 연결하거나 해제할 수 있습니다.</p>
+<ol>
+<li>Synology Assistant에서 <b>프린터 장치</b> 탭으로 이동합니다.</li>
+<li>연결할 프린터를 선택하고 <b>연결</b>을 클릭하세요. Synology Assistant가 프린터 연결을 시작합니다. 상태 열에 동작 상태가 표시됩니다.</li>
+<li>프린터가 연결되면 <b>연결</b> 버튼이 <b>해제</b>로 바뀝니다. 클릭하여 연결된 프린터를 해제할 수 있습니다.</li>
+</ol>
+<div class="section">
+<h4>참고:</h4>
+<ul>
+<li>상태 열에서 프린터 상태가 <b>사용 가능</b>이면, 프린터를 단독으로 연결할 수 있습니다.</li>
+<li>상태가 <b>연결됨</b>이면, 프린터가 이미 컴퓨터에 연결되어 있습니다.</li>
+<li>프린터를 당장 사용할 수 없는 경우 <b>연결</b>을 클릭하면 연결 대기 목록에 추가됩니다.</li>
+</ul>
+</div>
+<h4>프린터를 제거하려면:</h4>
+<ol>
+<li>목록에서 제거할 프린터를 선택하세요.</li>
+<li><b>제거</b>를 클릭하여 프린터를 목록에서 삭제하세요.</li>
+</ol>
+<h4>프린터 정보를 편집하려면:</h4>
+<p>Synology Assistant가 프린터의 IP를 자동으로 감지하지 못할 경우, 여기에서 수동으로 IP를 설정할 수 있습니다.</p>
+<ol>
+<li>편집할 프린터를 선택하세요.</li>
+<li><b>편집</b>을 클릭하고 프린터의 올바른 IP를 입력하세요.</li>
+</ol>
+<div class="section">
+<h4>참고:</h4>
+<ul>
+<li>네트워크 MFP는 Windows 사용자만 사용할 수 있습니다.</li>
+<li>프린터를 설정하기 전에 <a href="https://www.synology.com/compatibility?search_by=products&amp;model=&amp;category=usb_printers&amp;p=1" target="_blank">호환 프린터 목록</a>을 참조하세요.</li>
+<li>프린터 공유 시 USB 허브는 지원되지 않습니다.</li>
+<li>연결된 프린터의 메모리 카드 기능은 지원되지 않습니다.</li>
+</ul>
+</div>
+<h2><a name="preferences"></a>환경설정</h2>
+<p>오른쪽 상단의 기어 아이콘 <b>환경설정</b>을 클릭하여 다음 설정을 구성할 수 있습니다.</p>
+<ul>
+<li><b>기본 기능 탭</b>: Synology Assistant에 표시할 기능 탭을 선택합니다.</li>
+<li><b>언어</b>: Synology Assistant 사용자 인터페이스의 기본 언어를 선택합니다. 새 설정을 적용하려면 Synology Assistant를 다시 시작해야 합니다.</li>
+<li><b>메모리 테스트</b>: 체크박스를 선택하면 다음에 Synology Assistant를 실행할 때 <b>관리</b> 탭에 <b>메모리 테스트</b> 버튼이 표시됩니다. 서버를 선택하고 해당 버튼을 클릭하여 메모리 진단 테스트를 수행할 수 있습니다. 서버가 재부팅되며 테스트가 시작됩니다. 테스트 진행 상황은 서버 목록의 <b>상태</b> 열에 표시됩니다.</li>
+</ul>
+<div class="section">
+<h4>참고:</h4>
+<ul>
+<li>메모리 테스트 완료까지는 서버의 실제 메모리 크기에 따라 시간이 걸릴 수 있습니다. 듀얼 컨트롤러 모델에서는 한 번에 하나의 컨트롤러만 테스트하여 테스트 중에도 시스템이 서비스를 제공할 수 있도록 하세요.</li>
+<li>Synology Assistant를 통해 서버 연결 문제를 해결하려면 <a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">이 문서</a>를 참조하세요.</li>
+</ul>
+</div>
+</p></body>
+</html>

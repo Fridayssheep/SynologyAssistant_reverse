@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="img-no-display">
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<title>Synology Assistant</title>
+<link href="../../../../help/help.css" rel="stylesheet" type="text/css"/>
+<link href="../../../../help/scrollbar/flexcroll.css" rel="stylesheet" type="text/css"/>
+<script src="../../../../help/scrollbar/flexcroll.js" type="text/javascript"></script>
+<script src="../../../../help/scrollbar/initFlexcroll.js" type="text/javascript"></script>
+</head>
+<body>
+<h1>Synology Assistant</h1>
+<p>Synology Assistant è uno strumento facile da usare per gestire i sistemi di archiviazione nella rete locale (LAN), soprattutto quando si hanno più dispositivi che lavorano all'interno della LAN.</p>
+<p>Per scaricare e installare Synology Assistant sul computer, vai al <a href="https://www.synology.com/support/download" target="_blank">Centro Download</a> e seleziona il tuo modello. Successivamente, vai alla scheda <b>Utilità desktop</b> per trovare Synology Assistant.
+
+<h2><a name="Basic Control"></a>Controllo di base</h2>
+<p>Synology Assistant viene eseguito in background quando è ridotto a icona nel vano sistema. Fai clic con il tasto destro sull'icona per le seguenti opzioni:
+	<ul>
+<li>Collega/Rilascia stampanti: fino a 2 stampanti</li>
+<li>Apri/Chiudi Assistant</li>
+</ul>
+</p>
+<h2><a name="management"></a>Gestione</h2>
+<h4>Per cercare sistemi di archiviazione nella LAN:</h4>
+<p>Fai clic su <b>Cerca</b> per aggiornare l'elenco dei sistemi di archiviazione nella LAN.</p>
+<h4>Per connettersi a un server:</h4>
+<p>Puoi connetterti al server in uno dei seguenti modi:
+	<ul>
+<li>Seleziona un server e fai clic su <b>Connetti</b>.</li>
+<li>Fai doppio clic su un server.</li>
+</ul>
+</p>
+<h4>Per mappare un'unità:</h4>
+<p>Fai clic su <b>Mappa unità</b> per mappare una cartella condivisa come unità di rete per l'accesso locale.</p>
+<h4>Per configurare WOL:</h4>
+<p>Puoi configurare Wake on LAN (WOL) per accendere da remoto i sistemi di archiviazione Synology se hai abilitato questa funzione in <b>Pannello di controllo</b> &gt; <b>Hardware e alimentazione</b> &gt; <b>Generale</b>. Seleziona un server dall'elenco e fai clic su <b>Configura WOL</b>. Per ulteriori informazioni, consulta la sezione <a href="#wol">WOL</a>.</p>
+<div class="section">
+<h4>Nota:</h4>
+<p>Le opzioni di mappatura unità e WOL non sono disponibili se il dispositivo Synology non supporta queste funzionalità.</p>
+</div>
+<h2>Stato</h2>
+<p>Questa tabella elenca gli stati dei dispositivi in Synology Assistant e spiega il significato di ciascuno stato.
+	<table cellpadding="0" cellspacing="1" width="100%">
+<tbody>
+<tr>
+<th align="center" width="25%">Stato</th>
+<th align="center" width="75%">Indicazione stato</th>
+</tr>
+<tr>
+<td align="center">Avvio</td>
+<td align="left">Il sistema è in fase di avvio.</td>
+</tr>
+<tr>
+<td align="center">Verifica avanzamento</td>
+<td align="left">Il sistema è in fase di installazione o configurazione. Fai clic per verificare l'avanzamento.</td>
+</tr>
+<tr>
+<td align="center">Verifica quota</td>
+<td align="left">Il sistema sta verificando la quota del disco. Questo può essere causato da uno spegnimento improprio.</td>
+</tr>
+<tr>
+<td align="center">Verifica file system (X minuti rimanenti)</td>
+<td align="left">Il sistema sta verificando il file system. Il processo terminerà nel numero di minuti visualizzato. Questo di solito accade quando il sistema rileva errori nel file system e ti invita a eseguire un controllo del file system.</td>
+</tr>
+<tr>
+<td align="center">Errore di configurazione</td>
+<td align="left">Si è verificato un errore durante la configurazione. Fai doppio clic sul server per riapplicare le impostazioni.</td>
+</tr>
+<tr>
+<td align="center">Configurazione persa</td>
+<td align="left">Questo di solito accade dopo un <a href="https://kb.synology.com/DSM/tutorial/How_to_reset_my_Synology_NAS_7" target="_blank">Reset Modalità 2</a>, che consiste nel premere e tenere premuto il pulsante RESET sul dispositivo. Puoi fare doppio clic sul server e reinstallare il sistema operativo (OS) per un nuovo inizio senza influire sui dati nel volume. Se non hai premuto il pulsante RESET, controlla <a href="https://kb.synology.com/DSM/tutorial/Why_does_Synology_Assistant_display_Configuration_lost" target="_blank">altre possibili cause</a> di questo messaggio di errore.</td>
+</tr>
+<tr>
+<td align="center">Connessione non riuscita</td>
+<td align="left">Errore di configurazione di rete. Fai doppio clic sul server o fai clic su <b>Configura</b> per configurare le impostazioni di rete.</td>
+</tr>
+<tr>
+<td align="center">Verifica stato connessione</td>
+<td align="left">Il sistema sta verificando lo stato della connessione.</td>
+</tr>
+<tr>
+<td align="center">Migrabile</td>
+<td align="left">Le configurazioni di sistema sui dischi possono essere migrate su questo dispositivo. Questo di solito indica che la versione dell'OS registrata sulla scheda madre è più recente di quella sui dischi. È probabile che accada dopo un servizio RMA. Fai doppio clic sul server per completare la migrazione.</td>
+</tr>
+<tr>
+<td align="center">N/D</td>
+<td align="left">WOL è configurato ma lo stato attuale è sconosciuto. Consulta la sezione <a href="#wol">WOL</a> per ulteriori informazioni.</td>
+</tr>
+<tr>
+<td align="center">Non configurato</td>
+<td align="left">Le configurazioni iniziali dell'OS (ad es. password admin) dopo l'installazione non sono state completate. Fai doppio clic sul server per terminare la configurazione.</td>
+</tr>
+<tr>
+<td align="center">Non installato</td>
+<td align="left">Possibili cause: nessun disco rilevato sul server; l'OS non è stato installato; l'OS non è stato rilevato sui dischi; oppure hai fatto clic su <b>Elimina tutti i dati</b> in <b>Pannello di controllo</b> &gt; <b>Aggiorna e ripristina</b> &gt; <b>Ripristino sistema</b>.<br/>Soluzione: assicurati che i dischi siano sani, inseriti correttamente e rilevati dal server. Poi, fai doppio clic sul server per iniziare l'installazione dell'OS. Se l'OS era già installato sui dischi e li hai usati per un po', questo messaggio indica che il server non riesce a riconoscere i dati dell'OS sui dischi. In tal caso, annulla l'installazione, spegni il server, <a href="https://kb.synology.com/DSM/tutorial/What_should_I_do_when_my_Synology_NAS_cannot_recognize_installed_drives" target="_blank">scopri perché i dischi non sono riconosciuti</a> e <a href="https://kb.synology.com/DSM/tutorial/How_to_diagnose_drives_health_status_when_receiving_bad_sector_warning" target="_blank">esegui test diagnostici</a> su un computer per verificare lo stato di salute dei dischi.</td>
+</tr>
+<tr>
+<td align="center">Offline</td>
+<td align="left">Il sistema è offline.</td>
+</tr>
+<tr>
+<td align="center">Test memoria in corso (X%)</td>
+<td align="left">L'avanzamento del test memoria è al X%. Se ti viene richiesto di eseguire il test memoria, eseguilo almeno 3 volte. I risultati saranno salvati nel registro di sistema. <a href="https://kb.synology.com/DSM/help/DSM/SupportCenter/support_services" target="_blank">Genera un log debug.dat</a> e allegalo al ticket di supporto per l'analisi da parte di Synology.</td>
+</tr>
+<tr>
+<td align="center">Pronto</td>
+<td align="left">Il sistema è installato e pronto all'uso. Fai doppio clic sul server o clicca su <b>Connetti</b> per accedere al server.</td>
+</tr>
+<tr>
+<td align="center">Recuperabile</td>
+<td align="left">Il sistema è recuperabile. Questo di solito indica che la versione dell'OS registrata sulla scheda madre è più vecchia di quella sui dischi. È probabile che accada dopo un servizio RMA. Fai doppio clic sul server per completare il ripristino.</td>
+</tr>
+<tr>
+<td align="center">Avvio servizi</td>
+<td align="left">Il sistema sta avviando i servizi. Potrebbero essere necessari fino a 10 minuti per l'avvio completo di tutti i servizi.</td>
+</tr>
+<tr>
+<td align="center">Aggiornamento</td>
+<td align="left">Il dispositivo sta aggiornando l'OS. Attendere il completamento dell'aggiornamento.</td>
+</tr>
+</tbody>
+</table>
+</p>
+<h2><a name="wol"></a>WOL</h2>
+<h4>Per configurare WOL:</h4>
+<ol>
+<li>Vai su <b>Pannello di controllo</b> &gt; <b>Hardware e alimentazione</b> &gt; <b>Generale</b> e abilita WOL.</li>
+<li>In Synology Assistant, vai alla scheda <b>Gestione</b>. Seleziona un Synology NAS e fai clic su <b>Configura WOL</b> per visualizzare l'indirizzo MAC disponibile per WOL.</li>
+<li>Dopo la configurazione, lo <b>stato WOL</b> del server nella scheda <b>Gestione</b> cambierà in "WOL".</li>
+</ol>
+<div class="section">
+<h4>Nota:</h4>
+<ol>
+<li>La funzione WOL è supportata solo su alcuni modelli di Synology NAS. Consulta il <a href="https://www.synology.com/support/download" target="_blank">manuale del prodotto</a> del server per ulteriori informazioni.</li>
+<li>Puoi anche fare clic con il tasto destro su un server e selezionare <b>WOL</b> &gt; <b>Configura</b>.</li>
+</ol>
+</div>
+<h4>Per accendere un server:</h4>
+<ol>
+<li>Fai clic con il tasto destro su un server e seleziona <b>WOL</b> &gt; <b>Accendi</b>.</li>
+<li>Lo <b>stato WOL</b> del server cambierà in "Avanzamento X%", indicando l'avanzamento dell'accensione.</li>
+<li>Quando WOL è completato, lo stato WOL cambierà in "WOL". Per ulteriori informazioni sugli stati WOL, consulta la tabella seguente.</li>
+<table cellpadding="0" cellspacing="1" width="100%">
+<tr>
+<th align="center" width="25%">Stato WOL</th>
+<th align="center" width="75%">Indicazione stato</th>
+</tr>
+<tr>
+<td align="center">WOL</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL è configurato.</li>
+<li>Il server è acceso.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">--</td>
+<td align="left">
+<ol class="type_lower-decimal">
+<li>WOL non è configurato.</li>
+<li>Il server non supporta la funzione WOL.</li>
+</ol>
+</td>
+</tr>
+<tr>
+<td align="center">Avanzamento X%</td>
+<td align="left">Il server si sta accendendo. L'avanzamento è X%.</td>
+</tr>
+<tr>
+<td align="center">Spento</td>
+<td align="left">Il server è spento.</td>
+</tr>
+<tr>
+<td align="center">N/D</td>
+<td align="left">WOL è configurato ma lo stato attuale è sconosciuto.</td>
+</tr>
+</table>
+</ol>
+<h4>Per disabilitare WOL su un server:</h4>
+<ol>
+<li>Fai clic con il tasto destro su un server e seleziona <b>WOL</b> &gt; <b>Rimuovi</b>.</li>
+<li>Lo <b>stato WOL</b> del server cambierà in "--".</li>
+</ol>
+<h2><a name="Printer Device"></a>Dispositivo stampante</h2>
+<p>In Synology Assistant puoi gestire centralmente le stampanti collegate al Synology NAS nella scheda <b>Dispositivo stampante</b>. Sono supportate sia stampanti di base che multifunzione. Per condividere una stampante collegata al Synology NAS nella LAN tramite Synology Assistant, segui queste istruzioni.</p>
+<p>Nota che i dispositivi stampante sono supportati solo su alcuni modelli di Synology NAS con DSM. Consulta il <a href="https://www.synology.com/support/download" target="_blank">manuale del prodotto</a> del server per ulteriori informazioni.</p>
+<h4>Per aggiungere una stampante:</h4>
+<ol>
+<li>Collega la stampante al Synology NAS.</li>
+<li>Configura la modalità stampante in <b>Pannello di controllo</b> &gt; <b>Dispositivi esterni</b>. Qui viene visualizzato l'elenco delle stampanti collegate.</li>
+<li>Seleziona la stampante, fai clic su <b>Gestione stampante USB</b> e scegli <b>Configura stampante</b> per selezionare la modalità operativa della stampante. Scegli la modalità <b>Stampante di rete</b> se usi solo la funzione di stampa. Scegli <b>MFP di rete</b>* se vuoi usare anche le funzioni di stampa, scansione o fax.</li>
+<li>In Synology Assistant, vai alla scheda <b>Dispositivo stampante</b>. Fai clic su <b>Aggiungi</b> e segui la procedura guidata per aggiungere la stampante al computer. Se è la prima volta che aggiungi la stampante, assicurati di avere il driver pronto per l'installazione.</li>
+</ol>
+<h4>Per collegare/rilasciare una stampante:</h4>
+<p>Durante la stampa e l'invio di fax puoi eseguire le operazioni senza collegare manualmente la stampante in Synology Assistant. Tuttavia, se vuoi usare la funzione scanner o ricevere fax su una stampante multifunzione, devi collegare la stampante per evitare che altri utenti interrompano i lavori di stampa.</p>
+<p>Quando una stampante è collegata manualmente in Synology Assistant, gli altri utenti che condividono la stessa stampante nella LAN non possono accedere al dispositivo. Assicurati di rilasciare la stampante al termine del lavoro di stampa.</p>
+<p>Puoi seguire queste istruzioni per collegare o rilasciare la stampante.</p>
+<ol>
+<li>In Synology Assistant, vai alla scheda <b>Dispositivo stampante</b>.</li>
+<li>Seleziona la stampante che vuoi collegare e fai clic su <b>Collega</b>. Synology Assistant inizierà a connettere la stampante. La colonna stato mostrerà lo stato dell'operazione.</li>
+<li>Quando una stampante è collegata, il pulsante <b>Collega</b> diventerà <b>Rilascia</b>. Puoi cliccarlo per rilasciare la stampante collegata.</li>
+</ol>
+<div class="section">
+<h4>Nota:</h4>
+<ul>
+<li>Nella colonna stato, se lo stato della stampante è <b>Disponibile</b>, puoi collegare la stampante per uso esclusivo.</li>
+<li>Se lo stato è <b>Collegata</b>, la stampante è già collegata al computer.</li>
+<li>Se la stampante non è disponibile al momento, cliccando su <b>Collega</b> verrai aggiunto alla lista d'attesa per la connessione.</li>
+</ul>
+</div>
+<h4>Per rimuovere una stampante:</h4>
+<ol>
+<li>Seleziona la stampante che vuoi rimuovere dall'elenco.</li>
+<li>Fai clic su <b>Rimuovi</b> per eliminare la stampante dall'elenco.</li>
+</ol>
+<h4>Per modificare le informazioni della stampante:</h4>
+<p>Quando Synology Assistant non riesce a rilevare automaticamente l'IP della stampante, puoi impostare manualmente l'IP qui.</p>
+<ol>
+<li>Seleziona la stampante che vuoi modificare.</li>
+<li>Fai clic su <b>Modifica</b> e inserisci l'IP corretto della stampante.</li>
+</ol>
+<div class="section">
+<h4>Nota:</h4>
+<ul>
+<li>MFP di rete è disponibile solo per utenti Windows.</li>
+<li>Prima di configurare una stampante, consulta l'elenco delle <a href="https://www.synology.com/compatibility?search_by=products&amp;model=&amp;category=usb_printers&amp;p=1" target="_blank">stampanti compatibili</a>.</li>
+<li>Gli hub USB non sono supportati per la condivisione di una stampante.</li>
+<li>La funzione di memory card della stampante collegata non è supportata.</li>
+</ul>
+</div>
+<h2><a name="preferences"></a>Preferenze</h2>
+<p>Puoi cliccare sull'icona a forma di ingranaggio denominata <b>Preferenze</b> in alto a destra per configurare le seguenti impostazioni.</p>
+<ul>
+<li><b>Scheda funzioni predefinite</b>: seleziona le schede funzione da visualizzare in Synology Assistant.</li>
+<li><b>Lingua</b>: scegli una lingua predefinita per l'interfaccia utente di Synology Assistant. È necessario riavviare Synology Assistant affinché la nuova impostazione abbia effetto.</li>
+<li><b>Test memoria</b>: se selezioni la casella, il pulsante <b>Test memoria</b> apparirà nella scheda <b>Gestione</b> al prossimo avvio di Synology Assistant. Puoi selezionare un server e cliccare sul pulsante per eseguire un test diagnostico della memoria. Il server verrà riavviato e il test inizierà. L'avanzamento del test verrà mostrato nella colonna <b>Stato</b> dell'elenco server.</li>
+</ul>
+<div class="section">
+<h4>Nota:</h4>
+<ul>
+<li>Il completamento del test memoria potrebbe richiedere del tempo, a seconda della dimensione della memoria fisica del server. Nei modelli a doppio controller, testa un controller alla volta in modo che il sistema possa continuare a fornire servizi durante il test.</li>
+<li>Risolvi i problemi di connessione al server tramite Synology Assistant con <a href="https://kb.synology.com/DSM/tutorial/Unable_to_Locate_NAS" target="_blank">questo articolo</a>.</li>
+</ul>
+</div>
+</p></body>
+</html>
