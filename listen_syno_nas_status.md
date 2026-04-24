@@ -173,6 +173,242 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 | `Configuration lost` | 高概率对应 `IDS_LST_SYS_UNCONFIG (0)`，但还缺直接活包证据 |
 | `memory test progress at X%` | 已由活包确认对应 `status_value = 9`，并且 `field 0x79 = 百分比 x 100` |
 
+## 主程序补充逆向
+
+这部分是对 `SynologyAssistant.bin` 主程序进一步静态逆向后，当前已经能坐实的结论。
+
+### 1. 内存测试向导确实带管理员口令验证
+
+在 Linux 主程序里，和内存测试相关的字符串已经同时出现：
+
+| 证据字符串 | 说明 |
+| --- | --- |
+| `slotMemTestTrigged()` | 点击内存测试入口后的槽函数 |
+| `slotDoMemTest` | 内存测试执行槽 |
+| `Enter the Admin's Password` | 内存测试向导标题/提示 |
+| `Administrator account:` | 管理员账号输入标签 |
+| `Hint:` | 向导提示区标题 |
+| `It is important that you enter the correct server name and password here...` | 明确要求输入正确服务器名和密码 |
+
+也就是说，你看到“发起内存测试后要求验证管理员账户和密码”，这不是偶发行为，而是 Assistant 主程序本来就有的一页认证 UI。
+
+更关键的是，这条链现在已经不只是“有认证页”，而是已经能追到认证后的第一条真实发送：
+
+| 位置/函数 | 已确认行为 |
+| --- | --- |
+| `0x45d4b0` | 读取 `ConfirmPasswd` / `ConfirmAccount` 两个向导字段 |
+| `0x45b0c0(account, password, nas, 1)` | MemTest 认证与发包主函数 |
+| `0x47d010` | 对管理员密码做本地自定义编码 |
+| `0x47d1c0` | `0x47d010` 的解码伴随函数 |
+| `0x4abe80` | 组装 `packet_type = 0x0c` 的控制请求字段列表 |
+| `0x4abb00` | 对非 request-class 包做加密/包装 |
+| `0x4ac900` | 最终 UDP 发送函数 |
+
+其中 `0x45b0c0` 里可以明确看到：
+
+1. 密码走 `QString::toUtf8_helper -> snprintf -> 0x47d010`
+2. 账号走 `QString::toLocal8Bit_helper -> snprintf`
+3. 账号字符串被写入请求结构的 `+0xc24` 附近
+4. 明文控制 payload 的 `packet_type` 被直接写成 `0x0c`
+5. 随后 `0x4abe80` 组包，`0x4abb00` 做加密包装，最后由 `0x4ac900` 发出
+
+也就是说，“点内存测试 -> 输入管理员账号密码 -> 立刻发控制包”这条主链已经坐实，而且它不是 HTTP，而是 Assistant 自己的 UDP 控制路径；真正上网线的是 `alt/encrypted` 头那一路，不是普通清晰发现包。
+
+### 1.1 `0x47d010` 不是网页接口，而是本地自定义密码编码器
+
+之前只知道主程序里有 `http://sy.to/encryptpassword` 这个字符串；现在可以进一步确认：
+
+- MemTest 认证链上真正被调用的是 `0x47d010`
+- `0x47d010` 不是 `QCryptographicHash`
+- 它也不是直接去访问 `http://sy.to/encryptpassword`
+
+`0x47d010` 的行为已经能复现为：
+
+1. 把密码按 UTF-8 取字节
+2. 按 8 字节一组补零
+3. 每组与一个固定 `8x8` 矩阵相乘
+4. 每个结果按有符号 12 bit 整数编码
+5. 再映射到一个固定的 64 字符字母表输出
+
+固定字母表是：
+
+```text
+UPX-BkYa4Fyi2DjcLef6WmOA8pZrshQ+uv7Vwx3G9oHb1EIJKzMg5NqRSCtTld0n
+```
+
+现在这对编解码已经能对上：
+
+- `0x47d010` 负责编码
+- `0x47d1c0` 负责解码
+- 外层还有两层 QString 包装：
+  - `0x44bc17`：`QString -> encode -> QString`
+  - `0x44bd2e`：`QString -> decode -> QString`
+
+也就是说，这不是“单向混淆”，而是一套完整的本地私有字符串编解码器。MemTest 管理员密码在主程序里会先走这套编码，再进入后续控制请求结构。
+
+### 1.2 当前已确认的 MemTest 请求字段骨架
+
+在 `0x45b0c0 -> 0x4abe80` 这一段里，当前已能明确看到 builder 参数里至少包含：
+
+```text
+0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x4a, 0xc2, 0xc5
+```
+
+这些字段现在可以进一步细化为：
+
+| 字段 | 结构偏移 | 语义 |
+| --- | --- | --- |
+| `0x01` | `+0xed0` | `packet_type = 0x0c` |
+| `0x2a` | `+0x74` | 管理员密码经过 `0x47d010` 编码后的字符串 |
+| `0x4a` | `+0xc24` | 管理员账号字符串 |
+| `0xc5` | `+0x2f8c` | 本地 key ID / sender key id，由 `0x4affb0` 取出并注入 |
+| `0xc2` | `+0x2f40` | 从现有 `NASINFO` 克隆并原样回带的控制字 |
+
+另外，和这条链配套的还有：
+
+| 字段 | 结构偏移 | 语义 |
+| --- | --- | --- |
+| `0xc4` | `+0x2f48` | `0x40` 字节 key string |
+| `0xc6` | `+0x2f90` | 远端 key ID / lookup id，用于按 `MAC + key_id` 查本地 key |
+
+支撑这组判断的直接证据有：
+
+- `4af8e0` 用格式串 `%s+%08x` 和 `%s,%lx` 维护一条 `MAC + key_id -> key,timestamp` 的本地缓存
+- `4afc00` 用同样的 `%s+%08x` 取回 key，并在找不到时打印：
+  - `No key`
+  - `fail to find key for %s+%08x.`
+- 二进制里还有明确日志：
+  - `my key is %s, ID %08x`
+  - `FAILED to encrypt`
+  - `No key to decrypt`
+
+因此现在已经可以确认：
+
+- 这不是普通发现包
+- 这是一条 `packet_type = 0x0c` 的控制请求
+- `0x0c` 不属于 `request-class`
+- 因为 `4ab220` 只把 `0x01/0x13` 视为 request-class，所以 `0x0c` 一定会进入 `0x4abb00` 的加密包装路径
+- 最终发出去的是 `alt_or_encrypted` 头的 UDP 包
+
+### 1.3 `0x0c` 的完整外层包封装已经对上 `crypto_box_seal`
+
+这一步现在已经可以收敛到标准构造，而不是“某种私有加密黑盒”：
+
+- `4b6a40` 负责把缓存里的 `0xc4` 十六进制 key string 直接解成 32 字节公钥
+- `4b4600 -> 4b4930 -> 4b6330` 生成临时密钥并导出 32 字节临时公钥
+- `4b4660` 用 `blake2b(ephemeral_public_key || remote_public_key, digest_size=24)` 生成 24 字节 nonce
+- `4bd0a0 -> 4bcfd0 -> 4c19f0` 对明文 `0x0c` TLV 执行公钥盒加密
+- 最终密文 blob 的固定开销正好是 `48` 字节：
+  - `32` 字节临时公钥
+  - `16` 字节 MAC
+  - 再加密文主体
+- 外层再加 `8` 字节 `12 34 55 66 53 59 4e 4f` 头
+
+所以当前可以把最终发包形式写成：
+
+```text
+udp_packet =
+  ALT_HEADER ||
+  crypto_box_seal(clear_payload, remote_public_key)
+```
+
+### 1.4 现在可直接构造的 `0x0c` 明文 payload
+
+脚本按主程序里的固定顺序构造：
+
+```text
+0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x4a, 0xc2, 0xc5
+```
+
+对应语义如下：
+
+| 顺序 | 字段 | 内容 |
+| --- | --- | --- |
+| 1 | `0xa4` | 固定 `0x01020000` |
+| 2 | `0xa6` | 固定 `0x00000078` |
+| 3 | `0x01` | `packet_type = 0x0c` |
+| 4 | `0x19` | 目标 NAS 的 MAC 地址字符串 |
+| 5 | `0x2a` | 管理员密码经 `0x47d010` 编码后的字符串 |
+| 6 | `0x4a` | 管理员账号 |
+| 7 | `0xc2` | 从目标 `NASINFO` 克隆回带的控制字 |
+| 8 | `0xc5` | sender key id |
+
+### 1.5 真实抓包补齐了远端公钥获取流程
+
+这次 `memtest_192.168.2.11.pcapng` 里能看到完整前置交换：
+
+```text
+18:15:45  192.168.2.7 -> 255.255.255.255:9999  clear UDP len=157
+18:15:47  192.168.2.11 -> 192.168.2.7:9999     alt/encrypted UDP len=457
+18:17:00  192.168.2.7 -> 255.255.255.255:9999  alt/encrypted UDP len=180
+18:17:02  192.168.2.11 -> 192.168.2.7:9999     alt/encrypted UDP len=457
+```
+
+第一包 `157` 字节不是 MemTest 本身，而是 key exchange 明文请求。它的 TLV 顺序是：
+
+```text
+0xa4, 0xa6, 0x01, 0xb0, 0xb1, 0xb8, 0xb9, 0x7c, 0xc4, 0xc5
+```
+
+关键字段：
+
+| 字段 | 语义 |
+| --- | --- |
+| `0x01` | `packet_type = 0x01` |
+| `0xb0` / `0xb8` | key exchange 范围值，抓包中为 `0x1c0` |
+| `0xb1` / `0xb9` | 抓包中为 `0` |
+| `0x7c` | 本机网卡 MAC 字符串 |
+| `0xc4` | 本机临时 public key，64 hex 字符 |
+| `0xc5` | 本机 sender key id |
+
+NAS 随后的 `457` 字节回包是用本机 `0xc4` 加密的 sealed-box。也就是说，被动 pcap 里看得到本机公钥，但看不到本机临时私钥，所以不能直接从旧 pcap 解出 NAS 公钥。正确做法是主动复现这一步：我们自己生成一对临时 key，发同样的 `0x01 + 0xc4/0xc5` 请求，然后用自己的私钥解 NAS 回包，抽取其中的 `0xc4` 作为远端 NAS 公钥。
+
+`syno_memtest_flow.py` 现在已经补上这条路径：
+
+- `--fetch-remote-key`：主动发 key exchange 并解密 NAS 回包
+- `--dump-key-exchange-json`：打印解密后的 TLV
+- `--dump-key-exchange-packet-hex`：打印 157 字节明文请求
+- 如果 `--send-memtest` / `--dry-run-packet` 没提供 `--remote-key-hex`，脚本会自动先执行 `--fetch-remote-key`
+
+### 1.6 Python PoC 的当前能力
+
+新的 `syno_memtest_flow.py` 现在已经可以：
+
+- 复现密码编码 `0x47d010`
+- 复现 `0x01 + 0xc4/0xc5` key exchange
+- 主动解出目标 NAS 的远端 public key
+- 直接构造完整 `0x0c` 明文 TLV
+- 直接做 `crypto_box_seal`
+- 拼出最终的 `alt_or_encrypted` UDP 包
+- 直接向目标 `9999/udp` 发 MemTest 请求
+
+`0xc2` 的 bit 级定义还没有独立枚举表，但它在当前 MemTest 触发链里的角色已经明确：它不是现算随机值，而是从目标设备的现有 `NASINFO` 里克隆出来并原样回带的控制字。
+
+### 2. 未初始化 NAS 的配置/安装流程不是纯 UDP
+
+从 `slotManagerDoNetInstall` / `CThreadNetInstall` 往下追，目前已经确认：
+
+1. 安装线程下层对象会显式创建 `QTcpSocket`
+2. 它会对目标地址执行 `connect` / `waitForConnected(3000ms)`
+3. 随后通过 `QIODevice::write()` 往 socket 写一段私有二进制控制报文
+4. 线程里还会继续调用另一个发送/接收函数并长时间等待返回
+
+因此，`NetInstall` / “给未初始化 NAS 配置并安装”的主流程，已经可以排除“只靠普通 UDP 发现包完成”的可能。当前更接近：
+
+- 第 1 段：UDP 发现与选中设备
+- 第 2 段：TCP 私有会话执行安装/配置
+
+也就是一个“两段式流程”，而不是单一 UDP 控制。
+
+### 3. 还没完全钉死的点
+
+下面这些点仍在继续追：
+
+| 未完成项 | 当前状态 |
+| --- | --- |
+| `http://sy.to/encryptpassword` 在程序其它路径中的作用 | 已确认它不在当前 MemTest 主认证发送链上，但它在别处的用途还没完全归档 |
+| `0xc2` bit 级定义 | MemTest 链上已知是克隆回带的控制字，但还没拆出每一位的业务含义 |
+
 ## 常用命令
 
 主动广播探测并监听：
@@ -215,6 +451,44 @@ python3 listen_syno_nas_status.py --duration 30
 
 ```bash
 python3 listen_syno_nas_status.py --target-ip 192.168.2.6
+```
+
+MemTest PoC 自检：
+
+```bash
+python3 syno_memtest_flow.py --self-test-codec
+python3 syno_memtest_flow.py --self-test-seal
+```
+
+只获取目标 NAS 的远端公钥，不触发 MemTest：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --no-credentials \
+  --fetch-remote-key \
+  --dump-key-exchange-json
+```
+
+只组包，不发送：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --username admin \
+  --password 'your-password' \
+  --dry-run-packet
+```
+
+直接发起 MemTest 并等待状态切到内存测试中：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --username admin \
+  --password 'your-password' \
+  --send-memtest \
+  --wait-memory-test 60
 ```
 
 只发送 `packet_type = 0x01` 探测：
