@@ -538,6 +538,11 @@ def fetch_remote_key(
     if target_ip not in {"255.255.255.255", "0.0.0.0"}:
         send_targets.append("255.255.255.255")
     deadline = time.time() + timeout
+    seen_packets = 0
+    seen_from_target = 0
+    seen_alt_from_target = 0
+    decrypt_failures = 0
+    decrypted_without_key = 0
     try:
         if verbose:
             print(
@@ -560,19 +565,39 @@ def fetch_remote_key(
             if not ready:
                 continue
             blob, addr = listener.recvfrom(65535)
-            if addr[0] != target_ip or not blob.startswith(ALT_HEADER):
+            seen_packets += 1
+            if addr[0] != target_ip:
                 continue
+            seen_from_target += 1
+            if not blob.startswith(ALT_HEADER):
+                if verbose:
+                    header_hex = blob[:8].hex() if len(blob) >= 8 else blob.hex()
+                    print(
+                        f"{now_text()} key_exchange_ignore "
+                        f"src={addr[0]} bytes={len(blob)} header={header_hex}"
+                    )
+                continue
+            seen_alt_from_target += 1
             try:
                 decrypted = crypto_box_seal_open(blob[8:], local_public_key, local_secret_key)
             except Exception as exc:
+                decrypt_failures += 1
                 if verbose:
-                    print(f"{now_text()} key_exchange_decrypt_skip src={addr[0]} reason={exc}")
+                    print(
+                        f"{now_text()} key_exchange_decrypt_skip "
+                        f"src={addr[0]} bytes={len(blob)} sealed_bytes={len(blob) - 8} reason={exc}"
+                    )
                 continue
             parsed = parse_packet(CLEAR_HEADER + decrypted)
             remote_key = field_text(parsed, "0xc4")
             if not remote_key:
+                decrypted_without_key += 1
                 if verbose:
-                    print(f"{now_text()} key_exchange_decrypt_skip src={addr[0]} reason=no_0xc4")
+                    packet_type = parsed.get("packet_type_name") or parsed.get("packet_type_value")
+                    print(
+                        f"{now_text()} key_exchange_decrypt_skip "
+                        f"src={addr[0]} reason=no_0xc4 packet={packet_type}"
+                    )
                 continue
             remote_key = normalize_remote_key_hex(remote_key)
             return KeyExchangeResult(
@@ -590,7 +615,12 @@ def fetch_remote_key(
     finally:
         listener.close()
         sender.close()
-    raise TimeoutError(f"no decryptable key-exchange response from {target_ip} within {timeout:.1f}s")
+    raise TimeoutError(
+        f"no decryptable key-exchange response from {target_ip} within {timeout:.1f}s "
+        f"(seen={seen_packets}, from_target={seen_from_target}, "
+        f"alt_from_target={seen_alt_from_target}, decrypt_failures={decrypt_failures}, "
+        f"decrypted_without_key={decrypted_without_key})"
+    )
 
 
 def build_flow_plan(target_ip: str, state: DeviceState | None, creds: CredentialContext | None) -> MemTestFlowPlan:

@@ -470,6 +470,20 @@ python3 syno_memtest_flow.py \
   --dump-key-exchange-json
 ```
 
+如果 Windows 机器有多个网卡，建议显式指定抓包里 `0x7c` 对应的本机网卡 MAC。你这次 pcap 里该值是：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --no-credentials \
+  --fetch-remote-key \
+  --local-mac 02:11:32:2a:d6:1c \
+  --verbose \
+  --dump-key-exchange-json
+```
+
+如果 NAS 已经处于 `MEMORY_TEST_IN_PROGRESS`，它可能只继续回状态包，不再接受新的认证/key exchange；这种情况下等内存测试结束后再执行上面的 key 获取命令。
+
 只组包，不发送：
 
 ```bash
