@@ -190,9 +190,7 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 | `Hint:` | 向导提示区标题 |
 | `It is important that you enter the correct server name and password here...` | 明确要求输入正确服务器名和密码 |
 
-也就是说，你看到“发起内存测试后要求验证管理员账户和密码”，这不是偶发行为，而是 Assistant 主程序本来就有的一页认证 UI。
-
-更关键的是，这条链现在已经不只是“有认证页”，而是已经能追到认证后的第一条真实发送：
+认证后的第一条真实发送：
 
 | 位置/函数 | 已确认行为 |
 | --- | --- |
@@ -212,15 +210,7 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 4. 明文控制 payload 的 `packet_type` 被直接写成 `0x0c`
 5. 随后 `0x4abe80` 组包，`0x4abb00` 做加密包装，最后由 `0x4ac900` 发出
 
-也就是说，“点内存测试 -> 输入管理员账号密码 -> 立刻发控制包”这条主链已经坐实，而且它不是 HTTP，而是 Assistant 自己的 UDP 控制路径；真正上网线的是 `alt/encrypted` 头那一路，不是普通清晰发现包。
-
-### 1.1 `0x47d010` 不是网页接口，而是本地自定义密码编码器
-
-之前只知道主程序里有 `http://sy.to/encryptpassword` 这个字符串；现在可以进一步确认：
-
-- MemTest 认证链上真正被调用的是 `0x47d010`
-- `0x47d010` 不是 `QCryptographicHash`
-- 它也不是直接去访问 `http://sy.to/encryptpassword`
+###  `0x47d010` 本地自定义密码编码器
 
 `0x47d010` 的行为已经能复现为：
 
@@ -236,17 +226,15 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 UPX-BkYa4Fyi2DjcLef6WmOA8pZrshQ+uv7Vwx3G9oHb1EIJKzMg5NqRSCtTld0n
 ```
 
-现在这对编解码已经能对上：
-
 - `0x47d010` 负责编码
 - `0x47d1c0` 负责解码
 - 外层还有两层 QString 包装：
   - `0x44bc17`：`QString -> encode -> QString`
   - `0x44bd2e`：`QString -> decode -> QString`
 
-也就是说，这不是“单向混淆”，而是一套完整的本地私有字符串编解码器。MemTest 管理员密码在主程序里会先走这套编码，再进入后续控制请求结构。
+MemTest 管理员密码在主程序里会先走这套编码，再进入后续控制请求结构。
 
-### 1.2 当前已确认的 MemTest 请求字段骨架
+### 当前已确认的 MemTest 请求字段骨架
 
 在 `0x45b0c0 -> 0x4abe80` 这一段里，当前已能明确看到 builder 参数里至少包含：
 
@@ -282,17 +270,14 @@ UPX-BkYa4Fyi2DjcLef6WmOA8pZrshQ+uv7Vwx3G9oHb1EIJKzMg5NqRSCtTld0n
   - `FAILED to encrypt`
   - `No key to decrypt`
 
-因此现在已经可以确认：
+可以确认：
 
-- 这不是普通发现包
 - 这是一条 `packet_type = 0x0c` 的控制请求
 - `0x0c` 不属于 `request-class`
-- 因为 `4ab220` 只把 `0x01/0x13` 视为 request-class，所以 `0x0c` 一定会进入 `0x4abb00` 的加密包装路径
+-  `4ab220` 只把 `0x01/0x13` 视为 request-class， `0x0c` 一定会进入 `0x4abb00` 的加密包装路径
 - 最终发出去的是 `alt_or_encrypted` 头的 UDP 包
 
-### 1.3 `0x0c` 的完整外层包封装已经对上 `crypto_box_seal`
-
-这一步现在已经可以收敛到标准构造，而不是“某种私有加密黑盒”：
+### `0x0c` 的完整外层包封装 `crypto_box_seal`
 
 - `4b6a40` 负责把缓存里的 `0xc4` 十六进制 key string 直接解成 32 字节公钥
 - `4b4600 -> 4b4930 -> 4b6330` 生成临时密钥并导出 32 字节临时公钥
@@ -373,7 +358,7 @@ NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncry
 - `--dump-key-exchange-response-hex`：打印候选回包原始 hex，方便继续逆向解密失败原因
 - 如果 `--send-memtest` / `--dry-run-packet` 没提供 `--remote-key-hex`，脚本会自动先执行 `--fetch-remote-key`
 
-### 1.6 Python PoC 的当前能力
+### Python PoC 的当前能力
 
 新的 `syno_memtest_flow.py` 现在已经可以：
 
@@ -384,10 +369,21 @@ NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncry
 - 直接做 `crypto_box_seal`
 - 拼出最终的 `alt_or_encrypted` UDP 包
 - 直接向目标 `9999/udp` 发 MemTest 请求
+- 发包后等待 `status_value = 9`
+- 持续轮询并打印内存测试进度变化
 
 `0xc2` 的 bit 级定义还没有独立枚举表，但它在当前 MemTest 触发链里的角色已经明确：它不是现算随机值，而是从目标设备的现有 `NASINFO` 里克隆出来并原样回带的控制字。
 
-### 2. 未初始化 NAS 的配置/安装流程不是纯 UDP
+当前收敛后的判断：
+
+| 类别 | 结论 |
+| --- | --- |
+| 已实锤 | MemTest 入口、管理员认证页、密码编码、key exchange、`0x0c` 明文 TLV、sealed-box 外层、UDP 发送路径、`A7=9 + 0x79=进度x100` |
+| 已可用 | `syno_memtest_flow.py` 可以自动取 key、组包、发送、等待进入内存测试状态、持续打印进度 |
+| 仍是细节项 | `0xc2` 的 bit 级含义、部分错误码/失败回包 |
+| 不建议继续投入 | QuickConf 自定义用户名、打印机功能、普通 WOL、旧式网页 `encryptpassword` 路径 |
+
+### 未初始化 NAS 的配置
 
 从 `slotManagerDoNetInstall` / `CThreadNetInstall` 往下追，目前已经确认：
 
@@ -403,14 +399,57 @@ NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncry
 
 也就是一个“两段式流程”，而不是单一 UDP 控制。
 
-### 3. 还没完全钉死的点
+### Quick Setup 的账号名与 UDP 快速配置包
 
-下面这些点仍在继续追：
+“尚未设置”设备上的 Quick Setup 页面里，`admin` 不是输入框，而是固定 `QLabel`：
 
-| 未完成项 | 当前状态 |
+- `0x487452` 引用硬编码字符串 `0x4da21b = "admin"`
+- 随后调用 `QLabel::setText`，目标对象是页面里的管理员账号显示控件
+- 该页面只有三个可编辑 `QLineEdit`：新密码、确认新密码、服务器名称
+
+所以官方 Assistant UI 不能在 Quick Setup 页面修改默认管理员用户名。
+
+继续追 `CQuickConf` 后，Quick Setup 的第一段配置请求已经确认是 UDP 控制包：
+
+- `CThreadNetInstall` 调 `CQuickConf::start` 一类函数：`0x491d20 -> 0x4906b0`
+- `0x4906b0` 内部调用 `0x45b080`
+- `0x45b080` 固定把控制类型设为 `4`，进入 `0x45a8f0`
+- `0x45a8f0` 设置 `packet_type = 0x04`，再经 `0x4abe80` 组 TLV，最后 `0x4ac900` 发 UDP
+
+当前已确认 Quick Setup UDP 请求字段骨架：
+
+```text
+0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0xc5
+```
+
+字段含义：
+
+| 字段 | 含义 |
 | --- | --- |
-| `http://sy.to/encryptpassword` 在程序其它路径中的作用 | 已确认它不在当前 MemTest 主认证发送链上，但它在别处的用途还没完全归档 |
-| `0xc2` bit 级定义 | MemTest 链上已知是克隆回带的控制字，但还没拆出每一位的业务含义 |
+| `0x01` | `packet_type = 0x04`，QuickConf 控制请求 |
+| `0x19` | 目标 NAS MAC |
+| `0x2a` | 新管理员密码经过 `0x47d010` 编码后的字符串 |
+| `0x20` | DHCP/网络配置标志候选 |
+| `0x21` | 新服务器名称 |
+| `0x22` | 手动 IPv4 地址候选 |
+| `0x23` | 手动 netmask 候选 |
+| `0x24` | 手动 gateway 候选 |
+| `0x25` | 手动 DNS 候选 |
+| `0xc5` | 本地 sender key id |
+
+Quick Setup 的 `0x4abe80` 字段列表里没有 `0x4a`。`0x4a` 是 MemTest 管理员账号字段，但 Quick Setup 这条链没有把账号名作为 TLV 发出。官方 Quick Setup 协议路径只配置默认 `admin` 的密码和服务器名称/网络参数，不提供“创建其它管理员用户名”的协议字段。
+
+ `quickconf_192.168.2.16.pcapng` ：
+
+| 时间 | 流向 | 载荷 | 判断 |
+| --- | --- | --- | --- |
+| `19:18:11.074693` | `192.168.2.7:1234 -> 255.255.255.255:9999` | UDP `226` bytes，`ALT_HEADER = 1234556653594e4f` | Quick Setup 加密控制请求候选 |
+| `19:18:11.074876` | `192.168.2.7:50910 -> 255.255.255.255:9999` | 同一个 UDP `226` bytes 加密广播 | Assistant 双 socket/双源端口重发 |
+| `19:18:11.193432` | `192.168.2.16 -> 192.168.2.7` | ICMP echo request | NAS 开始用新地址响应/探测 |
+| `19:18:13.058075` | `192.168.2.16:1234 -> 255.255.255.255:9999` | UDP `461` bytes，`ALT_HEADER` | 配置后 NAS 回发加密状态/控制响应 |
+| `19:18:13.060292` | `192.168.2.7 -> 192.168.2.16:5000` | `GET / HTTP/1.1` | 配置完成后打开 DSM HTTP 首页 |
+
+其中 `226` 字节 UDP 包去掉 8 字节 `ALT_HEADER` 后是 `218` 字节 sealed box；按 `crypto_box_seal` 固定 `48` 字节开销反推，明文 QuickConf TLV 长度为 `170` 字节，和静态恢复出的 QuickConf 字段骨架长度相符。这个抓包没有看到 HTTP POST 或 TCP 私有配置请求先于 UDP 配置包发生；HTTP `GET /` 出现在 NAS 回发加密 UDP 之后，因此它更像是配置成功后的 UI 跳转/打开 DSM，而不是 Quick Setup 的配置传输本体。
 
 ## 常用命令
 
@@ -510,6 +549,29 @@ python3 syno_memtest_flow.py \
   --password 'your-password' \
   --send-memtest \
   --wait-memory-test 60
+```
+
+直接发起 MemTest，并持续打印进度变化：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --username admin \
+  --password 'your-password' \
+  --send-memtest \
+  --monitor-progress 600
+```
+
+如果要同时等待进入内存测试状态并继续监控进度：
+
+```bash
+python3 syno_memtest_flow.py \
+  --target-ip 192.168.2.11 \
+  --username admin \
+  --password 'your-password' \
+  --send-memtest \
+  --wait-memory-test 60 \
+  --monitor-progress 600
 ```
 
 只发送 `packet_type = 0x01` 探测：

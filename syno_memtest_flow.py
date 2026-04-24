@@ -742,6 +742,74 @@ def wait_for_memory_test(
         sender.close()
 
 
+def monitor_memory_test_progress(
+    target_ip: str,
+    target_port: int,
+    bind_send_port: int,
+    listen_ports: tuple[int, ...],
+    packet_types: tuple[int, ...],
+    a4: int,
+    a6: int,
+    timeout: float,
+    verbose: bool,
+) -> DeviceState | None:
+    listener, listen_port = bind_listener(listen_ports)
+    sender = make_sender(bind_send_port)
+    deadline = time.time() + timeout
+    last_signature: tuple[int | None, int | None, str | None] | None = None
+    last_state: DeviceState | None = None
+    seen_memtest = False
+    try:
+        if verbose:
+            print(
+                f"{now_text()} monitoring_memtest "
+                f"local_port={listen_port} target={target_ip}:{target_port} timeout={timeout:.1f}"
+            )
+        while time.time() < deadline:
+            send_discovery_round(
+                sock=sender,
+                packet_types=packet_types,
+                target_ip=target_ip,
+                target_port=target_port,
+                a4=a4,
+                a6=a6,
+                verbose=verbose,
+            )
+            round_deadline = min(deadline, time.time() + 1.0)
+            while time.time() < round_deadline:
+                ready, _, _ = select.select([listener], [], [], 0.25)
+                if not ready:
+                    continue
+                blob, addr = listener.recvfrom(65535)
+                try:
+                    parsed = parse_packet(blob)
+                except Exception:
+                    continue
+                state = device_from_packet(parsed, src_ip=addr[0])
+                if state is None:
+                    continue
+                if target_ip not in {"255.255.255.255", "0.0.0.0"} and addr[0] != target_ip:
+                    continue
+                signature = (state.status_value, state.progress_raw_x100, state.status_name)
+                if signature != last_signature:
+                    print(format_state(state))
+                    last_signature = signature
+                last_state = state
+                if state.status_value == 9:
+                    seen_memtest = True
+                elif seen_memtest:
+                    print(f"{now_text()} memory_test_monitor completed_or_left_memtest_state")
+                    return state
+        if last_state is None:
+            print(f"{now_text()} memory_test_monitor timeout={timeout:.1f} status=no_status_packet")
+        else:
+            print(f"{now_text()} memory_test_monitor timeout={timeout:.1f} status=last_state_reported")
+        return last_state
+    finally:
+        listener.close()
+        sender.close()
+
+
 def parse_port_list(text: str) -> tuple[int, ...]:
     values: list[int] = []
     for chunk in text.split(","):
@@ -775,7 +843,18 @@ def main() -> int:
     parser.add_argument("--a6", type=lambda s: int(s, 0), default=DEFAULT_A6, help="field 0xA6 u32")
     parser.add_argument("--discover-timeout", type=float, default=DEFAULT_DISCOVERY_TIMEOUT, help="discovery timeout seconds")
     parser.add_argument("--skip-discovery", action="store_true", help="skip initial status discovery and go directly to the requested action")
-    parser.add_argument("--wait-memory-test", type=float, default=0.0, help="after planning, wait up to N seconds for status=9")
+    parser.add_argument(
+        "--wait-memory-test",
+        type=float,
+        default=0.0,
+        help="wait up to N seconds for status=9; when combined with --send-memtest this runs after sending",
+    )
+    parser.add_argument(
+        "--monitor-progress",
+        type=float,
+        default=0.0,
+        help="poll and print memory-test status/progress changes for N seconds; runs after --send-memtest when used together",
+    )
     parser.add_argument("--username", help="administrator account")
     parser.add_argument("--password", help="administrator password")
     parser.add_argument("--no-credentials", action="store_true", help="skip prompting for credentials")
@@ -878,23 +957,6 @@ def main() -> int:
         for note in plan.notes:
             print(f"{now_text()} note={note}")
 
-    if args.wait_memory_test > 0:
-        result = wait_for_memory_test(
-            target_ip=args.target_ip,
-            target_port=args.target_port,
-            bind_send_port=args.bind_send_port,
-            listen_ports=listen_ports,
-            packet_types=packet_types,
-            a4=args.a4,
-            a6=args.a6,
-            timeout=args.wait_memory_test,
-            verbose=args.verbose,
-        )
-        if result is None:
-            print(f"{now_text()} memory_test_wait timeout={args.wait_memory_test}")
-            return 1
-        print(format_state(result))
-
     key_result = None
     remote_key_hex = args.remote_key_hex
     need_packet_key = args.send_memtest or args.dry_run_packet
@@ -975,6 +1037,36 @@ def main() -> int:
                 verbose=args.verbose,
             )
 
+    if args.wait_memory_test > 0:
+        result = wait_for_memory_test(
+            target_ip=args.target_ip,
+            target_port=args.target_port,
+            bind_send_port=args.bind_send_port,
+            listen_ports=listen_ports,
+            packet_types=packet_types,
+            a4=args.a4,
+            a6=args.a6,
+            timeout=args.wait_memory_test,
+            verbose=args.verbose,
+        )
+        if result is None:
+            print(f"{now_text()} memory_test_wait timeout={args.wait_memory_test}")
+            return 1
+        print(format_state(result))
+
+    if args.monitor_progress > 0:
+        monitor_memory_test_progress(
+            target_ip=args.target_ip,
+            target_port=args.target_port,
+            bind_send_port=args.bind_send_port,
+            listen_ports=listen_ports,
+            packet_types=packet_types,
+            a4=args.a4,
+            a6=args.a6,
+            timeout=args.monitor_progress,
+            verbose=args.verbose,
+        )
+
     if creds is not None:
         print(
             f"{now_text()} auth_summary "
@@ -985,7 +1077,7 @@ def main() -> int:
         if args.show_encoded_password:
             print(f"{now_text()} encoded_password={creds.encoded_password}")
 
-    if args.wait_memory_test <= 0 and not args.send_memtest and not args.dry_run_packet:
+    if args.wait_memory_test <= 0 and args.monitor_progress <= 0 and not args.send_memtest and not args.dry_run_packet:
         if key_result is not None:
             print(
                 f"{now_text()} next_step "
@@ -1000,4 +1092,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except (RuntimeError, TimeoutError, ValueError) as exc:
+        print(f"{now_text()} error={exc}", file=sys.stderr)
+        raise SystemExit(2)
