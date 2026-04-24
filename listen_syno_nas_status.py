@@ -55,6 +55,8 @@ class DeviceState:
     packet_name: str | None
     status_value: int | None
     status_name: str | None
+    progress_raw_x100: int | None
+    progress_percent: float | None
     conf: int | None
     con: int | None
     last_seen: float
@@ -207,10 +209,16 @@ def device_from_packet(parsed: dict[str, object], src_ip: str) -> DeviceState | 
     status_item = fields.get("0xa7")
     status_value = status_item.get("value") if status_item else None
     status_name = status_item.get("decoded") if status_item else None
+    progress_raw_x100 = parsed.get("progress_raw_x100")
+    progress_percent = parsed.get("progress_percent")
     if not isinstance(status_value, int):
         status_value = None
     if not isinstance(status_name, str):
         status_name = None
+    if not isinstance(progress_raw_x100, int):
+        progress_raw_x100 = None
+    if not isinstance(progress_percent, (int, float)):
+        progress_percent = None
 
     ip = first_text(fields, "0x48")
     remote_ip = first_text(fields, "0x18")
@@ -239,6 +247,8 @@ def device_from_packet(parsed: dict[str, object], src_ip: str) -> DeviceState | 
         packet_name=PACKET_TYPE_NAMES.get(packet_type),
         status_value=status_value,
         status_name=status_name,
+        progress_raw_x100=progress_raw_x100,
+        progress_percent=float(progress_percent) if progress_percent is not None else None,
         conf=conf,
         con=con,
         last_seen=time.time(),
@@ -259,6 +269,7 @@ def state_changed(old: DeviceState | None, new: DeviceState) -> bool:
         or old.model != new.model
         or old.platform != new.platform
         or old.serial != new.serial
+        or old.progress_raw_x100 != new.progress_raw_x100
         or old.conf != new.conf
         or old.con != new.con
     )
@@ -274,6 +285,10 @@ def format_state(state: DeviceState) -> str:
     ]
     if state.status_value is not None and state.status_name is not None:
         parts.append(f"status_value={state.status_value}")
+    if state.progress_percent is not None:
+        parts.append(f"progress={state.progress_percent:.2f}%")
+    if state.progress_raw_x100 is not None:
+        parts.append(f"progress_raw_x100={state.progress_raw_x100}")
     if state.src_ip != state.display_ip:
         parts.append(f"src_ip={state.src_ip}")
     if state.ip and state.ip != state.display_ip:

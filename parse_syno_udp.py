@@ -54,6 +54,7 @@ STATUS_ENUM: dict[int, str] = {
     6: "IDS_LST_SYS_QUOTA_CHECKING",
     7: "IDS_LST_SYS_SERVICE_STARTING",
     8: "IDS_LST_SYS_NET_ERROR",
+    9: "IDS_LST_SYS_MEMORY_TEST_IN_PROGRESS_INFERRED",
     10: "IDS_LST_SYS_NET_TESTING",
     11: "IDS_LST_SYS_RECOVERABLE",
     12: "IDS_WAKEUP_OFF_LINE",
@@ -73,13 +74,13 @@ class FieldInfo:
 # Confirmed from the static field descriptor table around .data:0x89f160.
 FIELD_MAP: dict[int, FieldInfo] = {
     0x01: FieldInfo("u32", 0x0ED0, 4, "packet_type"),
-    0x11: FieldInfo("str", 0x0008, 0x24, "string_0x11"),
-    0x12: FieldInfo("u32", 0x0E90, 4, "u32_0x12"),
-    0x13: FieldInfo("u32", 0x0E94, 4, "u32_0x13"),
-    0x14: FieldInfo("u32", 0x0E98, 4, "u32_0x14"),
-    0x15: FieldInfo("u32", 0x0E9C, 4, "u32_0x15"),
+    0x11: FieldInfo("str", 0x0008, 0x24, "server_name"),
+    0x12: FieldInfo("u32", 0x0E90, 4, "ipv4_raw_0x12"),
+    0x13: FieldInfo("u32", 0x0E94, 4, "netmask_or_mask_raw"),
+    0x14: FieldInfo("u32", 0x0E98, 4, "gateway_or_router_raw"),
+    0x15: FieldInfo("u32", 0x0E9C, 4, "dns_or_network_raw"),
     0x18: FieldInfo("ipv4", 0x0EA0, 4, "remote_ip"),
-    0x19: FieldInfo("str", 0x002C, 0x24, "string_0x19"),
+    0x19: FieldInfo("str", 0x002C, 0x24, "mac"),
     0x1A: FieldInfo("str", 0x0074, 0x604, "long_string_0x1a"),
     0x1E: FieldInfo("u32", 0x0EA8, 4, "u32_0x1e"),
     0x1F: FieldInfo("u32", 0x0EA4, 4, "u32_0x1f"),
@@ -92,7 +93,7 @@ FIELD_MAP: dict[int, FieldInfo] = {
     0x29: FieldInfo("str", 0x002C, 0x24, "string_0x29"),
     0x2A: FieldInfo("str", 0x0074, 0x604, "long_string_0x2a"),
     0x48: FieldInfo("ipv4", 0x0EB8, 4, "ip"),
-    0x49: FieldInfo("ipv4", 0x0EBC, 4, "ipv4_0x49"),
+    0x49: FieldInfo("ipv4", 0x0EBC, 4, "ipv4_aux_0x49"),
     0x4A: FieldInfo("str", 0x0C24, 0x1F0, "string_0x4a"),
     0x4D: FieldInfo("u32", 0x0F08, 4, "u32_0x4d"),
     0x50: FieldInfo("str", 0x0678, 0x14, "string_0x50"),
@@ -110,16 +111,16 @@ FIELD_MAP: dict[int, FieldInfo] = {
     0x5C: FieldInfo("str", 0x0BA8, 4, "blob_0x5c"),
     0x5D: FieldInfo("str", 0x0BAC, 4, "blob_0x5d"),
     0x60: FieldInfo("u32", 0x0ED8, 4, "u32_0x60"),
-    0x70: FieldInfo("str", 0x0BB0, 0x44, "string_0x70"),
+    0x70: FieldInfo("str", 0x0BB0, 0x44, "platform_string"),
     0x71: FieldInfo("u32", 0x0EC4, 4, "conf"),
-    0x73: FieldInfo("str", 0x0BF4, 0x0C, "string_0x73"),
-    0x75: FieldInfo("u32", 0x0EAC, 4, "u32_0x75"),
-    0x76: FieldInfo("u32", 0x0EB0, 4, "con"),
-    0x77: FieldInfo("str", 0x0E14, 8, "blob_0x77"),
-    0x78: FieldInfo("str", 0x0E24, 0x30, "string_0x78"),
-    0x79: FieldInfo("u32", 0x0EDC, 4, "u32_0x79"),
+    0x73: FieldInfo("str", 0x0BF4, 0x0C, "serial_suffix_or_short_id"),
+    0x75: FieldInfo("u32", 0x0EAC, 4, "http_port"),
+    0x76: FieldInfo("u32", 0x0EB0, 4, "https_port_or_service_port"),
+    0x77: FieldInfo("str", 0x0E14, 8, "dsm_version_short"),
+    0x78: FieldInfo("str", 0x0E24, 0x30, "model"),
+    0x79: FieldInfo("u32", 0x0EDC, 4, "progress_x100_or_u32_0x79"),
     0x7B: FieldInfo("u32", 0x0EE4, 4, "u32_0x7b"),
-    0x7C: FieldInfo("str", 0x0050, 0x24, "string_0x7c"),
+    0x7C: FieldInfo("str", 0x0050, 0x24, "mac_alt"),
     0x7D: FieldInfo("u32", 0x0EC0, 4, "u32_0x7d"),
     0x7E: FieldInfo("str", 0x0E1C, 8, "blob_0x7e"),
     0x7F: FieldInfo("str", 0x0E54, 0x30, "string_0x7f"),
@@ -129,7 +130,7 @@ FIELD_MAP: dict[int, FieldInfo] = {
     0x8F: FieldInfo("u32", 0x2FA4, 4, "u32_0x8f"),
     0x90: FieldInfo("u32", 0x2F34, 4, "u32_0x90"),
     0xA2: FieldInfo("str", 0x0C00, 0x24, "string_0xa2"),
-    0xA3: FieldInfo("u32", 0x0ECC, 4, "u32_0xa3"),
+    0xA3: FieldInfo("u32", 0x0ECC, 4, "server_flag_0xa3"),
     0xA4: FieldInfo("u32", 0x0EC8, 4, "u32_0xa4"),
     0xA6: FieldInfo("u32", 0x0ED4, 4, "u32_0xa6"),
     0xA7: FieldInfo("u32", 0x0EB4, 4, "status_or_err"),
@@ -143,8 +144,8 @@ FIELD_MAP: dict[int, FieldInfo] = {
     0xBD: FieldInfo("array", 0x1714, 0x40, "array_0xbd"),
     0xBE: FieldInfo("array", 0x1F14, 0x40, "array_0xbe"),
     0xBF: FieldInfo("array", 0x2714, 0x40, "array_0xbf"),
-    0xC0: FieldInfo("str", 0x2F14, 0x20, "string_0xc0"),
-    0xC1: FieldInfo("str", 0x2F38, 8, "blob_0xc1"),
+    0xC0: FieldInfo("str", 0x2F14, 0x20, "serial"),
+    0xC1: FieldInfo("str", 0x2F38, 8, "product_family"),
     0xC2: FieldInfo("u32", 0x2F40, 4, "u32_0xc2"),
     0xC3: FieldInfo("u32", 0x2F44, 4, "u32_0xc3"),
     0xC4: FieldInfo("str", 0x2F48, 0x41, "string_0xc4"),
@@ -162,6 +163,8 @@ def decode_value(field_id: int, payload: bytes) -> object:
         return payload.hex()
 
     if info.kind == "ipv4" and len(payload) == 4:
+        return str(ipaddress.IPv4Address(struct.unpack(">I", payload)[0]))
+    if field_id in {0x12, 0x14, 0x15, 0x1E} and len(payload) == 4:
         return str(ipaddress.IPv4Address(struct.unpack(">I", payload)[0]))
     if info.kind == "u32" and len(payload) == 4:
         return struct.unpack("<I", payload)[0]
@@ -283,12 +286,20 @@ def parse_packet(blob: bytes) -> dict[str, object]:
         result["has_key_range_fields"] = sorted(f"0x{x:02x}" for x in field_ids & KEY_RANGE_FIELDS)
     if field_ids & CONTROL_HEAVY_FIELDS:
         result["has_control_heavy_fields"] = sorted(f"0x{x:02x}" for x in field_ids & CONTROL_HEAVY_FIELDS)
+    if field_ids & {0x75, 0x76}:
+        result["has_web_port_fields"] = sorted(f"0x{x:02x}" for x in field_ids & {0x75, 0x76})
     if packet_type_value == 0x01 and DISCOVERY_CORE_FIELDS.issubset(field_ids) and not (field_ids & CONTROL_HEAVY_FIELDS):
         result["request_profile"] = "minimal_or_near-minimal_discovery_candidate"
     elif packet_type_value == 0x13:
         result["request_profile"] = "control_or_keyed_request_candidate"
     if field_ids & {0xA0, 0xA1}:
         result["has_special_extension_fields"] = sorted(f"0x{x:02x}" for x in field_ids & {0xA0, 0xA1})
+    if packet_type_value in (0x02, 0x06):
+        status_item = next((item for item in items if item.get("field_id") == "0xa7" and isinstance(item.get("value"), int)), None)
+        progress_item = next((item for item in items if item.get("field_id") == "0x79" and isinstance(item.get("value"), int)), None)
+        if status_item and status_item["value"] == 9 and progress_item:
+            result["progress_raw_x100"] = progress_item["value"]
+            result["progress_percent"] = round(progress_item["value"] / 100.0, 2)
     if long_chunks:
         try:
             result["field_0x72_reassembled"] = b"".join(long_chunks).decode("utf-8")

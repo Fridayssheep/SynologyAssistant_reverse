@@ -84,6 +84,8 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 | `packet` | `field 0x01` | 响应包类型，通常是 `BResponse` 或 `JResponse` |
 | `status` | `field 0xA7` | NAS/DSM 状态枚举名称 |
 | `status_value` | `field 0xA7` | NAS/DSM 状态原始整数值 |
+| `progress` | `field 0x79 / 100` | 当处于内存测试状态时输出实际百分比，例如 `4.97%` |
+| `progress_raw_x100` | `field 0x79` | 内存测试进度的原始整数值，例如 `497` |
 | `ip` | UDP 源地址优先 | 最终展示的 NAS IP；比 `0x18/0x48` 更可靠 |
 | `src_ip` | UDP 源地址 | 仅当最终展示 IP 与 UDP 源地址不一致时输出 |
 | `field_ip` | `field 0x48` | 协议字段候选 IP；当前仅作调试参考 |
@@ -94,7 +96,38 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 | `platform` | `field 0x70` | Synology 平台串，例如 `synology_epyc7002_sa6400` |
 | `serial` | `field 0xC0` 优先 | NAS 序列号，例如 `V9F7O2T68BY24` |
 | `conf` | `field 0x71` | 配置/确认类标志，具体业务含义仍需结合包型判断 |
-| `con` | `field 0x76` | 连接/端口类数值；实测可能出现 `5001` |
+| `con` | `field 0x76` | 默认 HTTPS 或服务端口；实测为 `5001` |
+
+## 已确认协议字段
+
+下面这些字段已经通过你提供的真实抓包坐实：
+
+| 字段 ID | 示例值 | 含义 |
+| --- | --- | --- |
+| `0x11` | `HOMENAS` | 服务器名称 |
+| `0x19` | `00:1b:21:bd:94:ce` | MAC 地址 |
+| `0x70` | `synology_epyc7002_sa6400` | 平台 / 产品族字符串 |
+| `0x71` | `1` | 配置标志 |
+| `0x75` | `5000` | HTTP 端口 |
+| `0x76` | `5001` | HTTPS 端口或服务端口 |
+| `0x77` | `7.3.2` | DSM 短版本字符串 |
+| `0x78` | `SA6400` | 型号 |
+| `0x79` | `497` | 内存测试进度，单位为百分比乘以 `100` |
+| `0xA7` | `1` | 系统状态枚举 |
+| `0xC0` | `V9F7O2T68BY24` | 完整序列号 |
+| `0xC1` | `DSM` | 产品族 |
+
+另外几项值得继续观察：
+
+| 字段 ID | 示例值 | 当前理解 |
+| --- | --- | --- |
+| `0x12` | `192.168.2.6` | 设备 IPv4 候选字段 |
+| `0x14` | `192.168.2.1` | 网关候选字段 |
+| `0x1E` | `192.168.2.7` | 同网段辅助 IP 候选字段，可能与发现端或路由环境相关 |
+| `0x18` | `1.0.0.0` | 当前仍不可信，暂不作为真实 IP 使用 |
+| `0x48` | `1.0.0.0` | 当前仍不可信，暂不作为真实 IP 使用 |
+| `0x49` | `249.79.1.0` | 辅助 IPv4 原始字段，语义未完全确认 |
+| `0x73` | `9FO2T8BY24` | 序列号相关短字段，不作为最终序列号 |
 
 ## DSM 状态枚举
 
@@ -111,11 +144,34 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 | `6` | `IDS_LST_SYS_QUOTA_CHECKING` | 配额检查中 |
 | `7` | `IDS_LST_SYS_SERVICE_STARTING` | 服务启动中 |
 | `8` | `IDS_LST_SYS_NET_ERROR` | 网络错误 / 连接失败 |
+| `9` | `IDS_LST_SYS_MEMORY_TEST_IN_PROGRESS_INFERRED` | 内存测试进行中 |
 | `10` | `IDS_LST_SYS_NET_TESTING` | 网络测试中 |
 | `11` | `IDS_LST_SYS_RECOVERABLE` | 可恢复 |
 | `12` | `IDS_WAKEUP_OFF_LINE` | 唤醒 / 离线相关状态 |
 | `13` | `IDS_LST_SYS_CHECKING_PROGRESS` | 检查进度中 |
 | `14` | `IDS_LST_SYS_MIGRAT` | 可迁移 |
+
+这些状态和 Synology Assistant 自带帮助页中的 UI 文案是一致的，官方帮助里对应条目包括：
+
+| 枚举 | UI 文案 |
+| --- | --- |
+| `5` | `Booting` |
+| `6` | `Checking quota` |
+| `8` | `Connection failed` |
+| `9` | `memory test progress at X%` |
+| `14` | `Migratable` |
+| `2` | `Not installed` |
+| `12` | `Offline` |
+| `1` | `Ready` |
+| `11` | `Recoverable` |
+| `7` | `Starting services` |
+
+另外，帮助页里还有 `Configuration lost` 和 `memory test progress at X%` 两类 UI 状态。其中：
+
+| UI 文案 | 当前协议映射状态 |
+| --- | --- |
+| `Configuration lost` | 高概率对应 `IDS_LST_SYS_UNCONFIG (0)`，但还缺直接活包证据 |
+| `memory test progress at X%` | 已由活包确认对应 `status_value = 9`，并且 `field 0x79 = 百分比 x 100` |
 
 ## 常用命令
 
