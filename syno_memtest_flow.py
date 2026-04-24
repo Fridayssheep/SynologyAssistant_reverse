@@ -603,7 +603,10 @@ def fetch_remote_key(
                         f"src={addr[0]} bytes={len(blob)} sealed_bytes={len(blob) - 8} reason={exc}"
                     )
                 continue
-            parsed = parse_packet(CLEAR_HEADER + decrypted)
+            if decrypted.startswith(CLEAR_HEADER) or decrypted.startswith(ALT_HEADER):
+                parsed = parse_packet(decrypted)
+            else:
+                parsed = parse_packet(CLEAR_HEADER + decrypted)
             remote_key = field_text(parsed, "0xc4")
             if not remote_key:
                 decrypted_without_key += 1
@@ -983,10 +986,16 @@ def main() -> int:
             print(f"{now_text()} encoded_password={creds.encoded_password}")
 
     if args.wait_memory_test <= 0 and not args.send_memtest and not args.dry_run_packet:
-        print(
-            f"{now_text()} next_step "
-            "password codec, sealed-box wrapper, and memtest packet builder are confirmed; provide --remote-key-hex to build/send a real memtest packet"
-        )
+        if key_result is not None:
+            print(
+                f"{now_text()} next_step "
+                "remote key was fetched; add --username/--password with --dry-run-packet or --send-memtest to build/send the memtest packet"
+            )
+        else:
+            print(
+                f"{now_text()} next_step "
+                "password codec, sealed-box wrapper, and memtest packet builder are confirmed; use --fetch-remote-key or provide --remote-key-hex to build/send a real memtest packet"
+            )
     return 0
 
 
