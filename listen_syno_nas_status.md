@@ -175,11 +175,9 @@ time=2026-04-24 14:16:10 key=00:1b:21:bd:94:ce packet=BResponse status=IDS_LST_S
 
 ## 主程序补充逆向
 
-这部分是对 `SynologyAssistant.bin` 主程序进一步静态逆向后，当前已经能坐实的结论。
+### 管理员口令验证
 
-### 1. 内存测试向导确实带管理员口令验证
-
-在 Linux 主程序里，和内存测试相关的字符串已经同时出现：
+和内存测试相关的字符串已经同时出现：
 
 | 证据字符串 | 说明 |
 | --- | --- |
@@ -234,15 +232,13 @@ UPX-BkYa4Fyi2DjcLef6WmOA8pZrshQ+uv7Vwx3G9oHb1EIJKzMg5NqRSCtTld0n
 
 MemTest 管理员密码在主程序里会先走这套编码，再进入后续控制请求结构。
 
-### 当前已确认的 MemTest 请求字段骨架
+### MemTest 请求字段骨架
 
-在 `0x45b0c0 -> 0x4abe80` 这一段里，当前已能明确看到 builder 参数里至少包含：
+在 `0x45b0c0 -> 0x4abe80`，builder 参数里至少包含：
 
 ```text
 0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x4a, 0xc2, 0xc5
 ```
-
-这些字段现在可以进一步细化为：
 
 | 字段 | 结构偏移 | 语义 |
 | --- | --- | --- |
@@ -251,15 +247,10 @@ MemTest 管理员密码在主程序里会先走这套编码，再进入后续控
 | `0x4a` | `+0xc24` | 管理员账号字符串 |
 | `0xc5` | `+0x2f8c` | 本地 key ID / sender key id，由 `0x4affb0` 取出并注入 |
 | `0xc2` | `+0x2f40` | 从现有 `NASINFO` 克隆并原样回带的控制字 |
-
-另外，和这条链配套的还有：
-
-| 字段 | 结构偏移 | 语义 |
-| --- | --- | --- |
 | `0xc4` | `+0x2f48` | `0x40` 字节 key string |
 | `0xc6` | `+0x2f90` | 远端 key ID / lookup id，用于按 `MAC + key_id` 查本地 key |
 
-支撑这组判断的直接证据有：
+证据：
 
 - `4af8e0` 用格式串 `%s+%08x` 和 `%s,%lx` 维护一条 `MAC + key_id -> key,timestamp` 的本地缓存
 - `4afc00` 用同样的 `%s+%08x` 取回 key，并在找不到时打印：
@@ -283,23 +274,22 @@ MemTest 管理员密码在主程序里会先走这套编码，再进入后续控
 - `4b4600 -> 4b4930 -> 4b6330` 生成临时密钥并导出 32 字节临时公钥
 - `4b4660` 用 `blake2b(ephemeral_public_key || remote_public_key, digest_size=24)` 生成 24 字节 nonce
 - `4bd0a0 -> 4bcfd0 -> 4c19f0` 对明文 `0x0c` TLV 执行公钥盒加密
-- 最终密文 blob 的固定开销正好是 `48` 字节：
+- 最终密文 blob 正好是48字节：
   - `32` 字节临时公钥
   - `16` 字节 MAC
   - 再加密文主体
 - 外层再加 `8` 字节 `12 34 55 66 53 59 4e 4f` 头
 
-所以当前可以把最终发包形式写成：
-
+最终发包形式：
 ```text
 udp_packet =
   ALT_HEADER ||
   crypto_box_seal(clear_payload, remote_public_key)
 ```
 
-### 1.4 现在可直接构造的 `0x0c` 明文 payload
+### `0x0c` 明文 payload
 
-脚本按主程序里的固定顺序构造：
+脚本由主程序里的固定顺序构造：
 
 ```text
 0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x4a, 0xc2, 0xc5
@@ -318,9 +308,9 @@ udp_packet =
 | 7 | `0xc2` | 从目标 `NASINFO` 克隆回带的控制字 |
 | 8 | `0xc5` | sender key id |
 
-### 1.5 真实抓包补齐了远端公钥获取流程
+### 远端公钥获取流程
 
-这次 `memtest_192.168.2.11.pcapng` 里能看到完整前置交换：
+根据认证后的抓包获取认证流程:
 
 ```text
 18:15:45  192.168.2.7 -> 255.255.255.255:9999  clear UDP len=157
@@ -335,8 +325,6 @@ udp_packet =
 0xa4, 0xa6, 0x01, 0xb0, 0xb1, 0xb8, 0xb9, 0x7c, 0xc4, 0xc5
 ```
 
-关键字段：
-
 | 字段 | 语义 |
 | --- | --- |
 | `0x01` | `packet_type = 0x01` |
@@ -346,19 +334,19 @@ udp_packet =
 | `0xc4` | 本机临时 public key，64 hex 字符 |
 | `0xc5` | 本机 sender key id |
 
-NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncrypted` 路径。该路径会先检查 `alt/encrypted` 头，再用本机 keypair 做 `crypto_box_open` 风格解密；它和发出 MemTest 请求时的 sealed-box 构造相关，但不能简单等同于“对旧 pcap 直接执行 `crypto_box_seal_open` 就一定能打开”。被动 pcap 里看得到本机公钥，但看不到当时 Assistant 的临时私钥，所以旧 pcap 不能直接解出 NAS 公钥。
+NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncrypted` 路径。该路径会先检查 `alt/encrypted` 头，再用本机 keypair 做 `crypto_box_open` 风格解密；它和发出 MemTest 请求时的 sealed-box 构造相关，被动 pcap 里看得到本机公钥，但看不到当时 Assistant 的临时私钥，旧 pcap 不能直接解出 NAS 公钥。生成一对临时 key，发同样的 `0x01 + 0xc4/0xc5` 请求，然后用私钥解 NAS 回包，抽取其中的 `0xc4` 作为远端 NAS 公钥。
 
-正确做法仍然是主动复现这一步：我们自己生成一对临时 key，发同样的 `0x01 + 0xc4/0xc5` 请求，然后用自己的私钥解 NAS 回包，抽取其中的 `0xc4` 作为远端 NAS 公钥。实测已经在 `192.168.2.6` 上验证成功，回包解密后能得到 `BResponse` 里的 `0xc4` 和 `0xc5`。如果 NAS 已经处于 `MEMORY_TEST_IN_PROGRESS`，它可能只继续回状态或旧会话相关的 encrypted 包，不再对新的 key exchange 返回可由当前临时私钥解开的内容。
+如果 NAS 已经处于 `MEMORY_TEST_IN_PROGRESS`，它可能只继续回状态或旧会话相关的 encrypted 包，不再对新的 key exchange 返回可由当前临时私钥解开的内容。
 
-`syno_memtest_flow.py` 现在已经补上这条路径：
+`syno_memtest_flow.py` 已有的流程：
 
 - `--fetch-remote-key`：主动发 key exchange 并解密 NAS 回包
 - `--dump-key-exchange-json`：打印解密后的 TLV
 - `--dump-key-exchange-packet-hex`：打印 157 字节明文请求
-- `--dump-key-exchange-response-hex`：打印候选回包原始 hex，方便继续逆向解密失败原因
-- 如果 `--send-memtest` / `--dry-run-packet` 没提供 `--remote-key-hex`，脚本会自动先执行 `--fetch-remote-key`
+- `--dump-key-exchange-response-hex`：打印候选回包原始 hex
+- 如果 `--send-memtest` / `--dry-run-packet` 没提供 `--remote-key-hex`，脚本会自动执行 `--fetch-remote-key`
 
-### Python PoC 的当前能力
+### Python PoC
 
 新的 `syno_memtest_flow.py` 现在已经可以：
 
@@ -372,57 +360,41 @@ NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncry
 - 发包后等待 `status_value = 9`
 - 持续轮询并打印内存测试进度变化
 
-`0xc2` 的 bit 级定义还没有独立枚举表，但它在当前 MemTest 触发链里的角色已经明确：它不是现算随机值，而是从目标设备的现有 `NASINFO` 里克隆出来并原样回带的控制字。
-
-当前收敛后的判断：
-
-| 类别 | 结论 |
-| --- | --- |
-| 已实锤 | MemTest 入口、管理员认证页、密码编码、key exchange、`0x0c` 明文 TLV、sealed-box 外层、UDP 发送路径、`A7=9 + 0x79=进度x100` |
-| 已可用 | `syno_memtest_flow.py` 可以自动取 key、组包、发送、等待进入内存测试状态、持续打印进度 |
-| 仍是细节项 | `0xc2` 的 bit 级含义、部分错误码/失败回包 |
-| 不建议继续投入 | QuickConf 自定义用户名、打印机功能、普通 WOL、旧式网页 `encryptpassword` 路径 |
+`0xc2` 的 bit 级定义还没有独立枚举表，是从目标设备的现有 `NASINFO` 里克隆出来并原样回带的控制字。
 
 ### 未初始化 NAS 的配置
-
-从 `slotManagerDoNetInstall` / `CThreadNetInstall` 往下追，目前已经确认：
 
 1. 安装线程下层对象会显式创建 `QTcpSocket`
 2. 它会对目标地址执行 `connect` / `waitForConnected(3000ms)`
 3. 随后通过 `QIODevice::write()` 往 socket 写一段私有二进制控制报文
 4. 线程里还会继续调用另一个发送/接收函数并长时间等待返回
 
-因此，`NetInstall` / “给未初始化 NAS 配置并安装”的主流程，已经可以排除“只靠普通 UDP 发现包完成”的可能。当前更接近：
-
+`NetInstall` / “给未初始化 NAS 配置并安装”的主流程：
 - 第 1 段：UDP 发现与选中设备
 - 第 2 段：TCP 私有会话执行安装/配置
 
-也就是一个“两段式流程”，而不是单一 UDP 控制。
-
 ### Quick Setup 的账号名与 UDP 快速配置包
 
-“尚未设置”设备上的 Quick Setup 页面里，`admin` 不是输入框，而是固定 `QLabel`：
+“尚未设置”设备上的 Quick Setup 页面里，`admin` 为固定字段`QLabel`：
 
 - `0x487452` 引用硬编码字符串 `0x4da21b = "admin"`
 - 随后调用 `QLabel::setText`，目标对象是页面里的管理员账号显示控件
 - 该页面只有三个可编辑 `QLineEdit`：新密码、确认新密码、服务器名称
 
-所以官方 Assistant UI 不能在 Quick Setup 页面修改默认管理员用户名。
+官方 Assistant UI 不允许 Quick Setup 页面修改默认管理员用户名。
 
-继续追 `CQuickConf` 后，Quick Setup 的第一段配置请求已经确认是 UDP 控制包：
+`CQuickConf` 中Quick Setup 的第一段配置请求为 UDP 控制包：
 
 - `CThreadNetInstall` 调 `CQuickConf::start` 一类函数：`0x491d20 -> 0x4906b0`
 - `0x4906b0` 内部调用 `0x45b080`
 - `0x45b080` 固定把控制类型设为 `4`，进入 `0x45a8f0`
 - `0x45a8f0` 设置 `packet_type = 0x04`，再经 `0x4abe80` 组 TLV，最后 `0x4ac900` 发 UDP
 
-当前已确认 Quick Setup UDP 请求字段骨架：
+Quick Setup UDP 请求字段骨架：
 
 ```text
 0xa4, 0xa6, 0x01, 0x19, 0x2a, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0xc5
 ```
-
-字段含义：
 
 | 字段 | 含义 |
 | --- | --- |
@@ -437,9 +409,9 @@ NAS 随后的 `457` 字节回包进入的是 Assistant 的 `FHOSTPacketReadEncry
 | `0x25` | 手动 DNS 候选 |
 | `0xc5` | 本地 sender key id |
 
-Quick Setup 的 `0x4abe80` 字段列表里没有 `0x4a`。`0x4a` 是 MemTest 管理员账号字段，但 Quick Setup 这条链没有把账号名作为 TLV 发出。官方 Quick Setup 协议路径只配置默认 `admin` 的密码和服务器名称/网络参数，不提供“创建其它管理员用户名”的协议字段。
+Quick Setup 的 `0x4abe80` 字段列表里没有 `0x4a`。`0x4a` 是 MemTest 管理员账号字段，但 Quick Setup 没有把账号名作为 TLV 发出。官方 Quick Setup 协议路径只配置默认 `admin` 的密码和服务器名称/网络参数，不提供“创建其它管理员用户名”的协议字段。
 
- `quickconf_192.168.2.16.pcapng` ：
+来自Wireshark抓包分析：
 
 | 时间 | 流向 | 载荷 | 判断 |
 | --- | --- | --- | --- |
@@ -449,7 +421,7 @@ Quick Setup 的 `0x4abe80` 字段列表里没有 `0x4a`。`0x4a` 是 MemTest 管
 | `19:18:13.058075` | `192.168.2.16:1234 -> 255.255.255.255:9999` | UDP `461` bytes，`ALT_HEADER` | 配置后 NAS 回发加密状态/控制响应 |
 | `19:18:13.060292` | `192.168.2.7 -> 192.168.2.16:5000` | `GET / HTTP/1.1` | 配置完成后打开 DSM HTTP 首页 |
 
-其中 `226` 字节 UDP 包去掉 8 字节 `ALT_HEADER` 后是 `218` 字节 sealed box；按 `crypto_box_seal` 固定 `48` 字节开销反推，明文 QuickConf TLV 长度为 `170` 字节，和静态恢复出的 QuickConf 字段骨架长度相符。这个抓包没有看到 HTTP POST 或 TCP 私有配置请求先于 UDP 配置包发生；HTTP `GET /` 出现在 NAS 回发加密 UDP 之后，因此它更像是配置成功后的 UI 跳转/打开 DSM，而不是 Quick Setup 的配置传输本体。
+其中 `226` 字节 UDP 包去掉 8 字节 `ALT_HEADER` 后是 `218` 字节 sealed box；按 `crypto_box_seal` 固定 `48` 字节开销反推，明文 QuickConf TLV 长度为 `170` 字节，和静态恢复出的 QuickConf 字段骨架长度相符。抓包没有看到 HTTP POST 或 TCP 私有配置请求先于 UDP 配置包发生；HTTP `GET /` 出现在 NAS 回发加密 UDP 之后，疑似用作自动打开DSM网页
 
 ## 常用命令
 
@@ -633,8 +605,6 @@ Synology Assistant 的“序列号”来自同一个 UDP 发现响应包，不�
 ```bash
 python3 listen_syno_nas_status.py --dump-strings --dump-json --print-all
 ```
-
-然后重点看输出中类似 `V9F7O2T68BY24` 这种字母数字混合字符串。确认字段 ID 后，可以把该字段固定加入脚本的优先序列号字段列表。
 
 ## IP 字段注意事项
 
